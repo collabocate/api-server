@@ -7,12 +7,12 @@ import cors from 'cors';
 import { errorHandler } from '@lib/errors/ErrorHandler';
 import { CustomErrorInterface } from '@lib/errors/CustomError';
 import { notFoundErr } from '@lib/errors/Errors';
-import { router as appRouter } from '@api-community/app.route';
-import { router as githubRouter } from '@api-github/github.route';
-import { router as authRouter } from '@auth/auth.route';
-import { router as userRouter } from '@user/user.route';
+import { router as appRouter } from '@server/@api-home/app.route';
+import { router as githubRouter } from '@api-external/github.route';
+import { router as authRouter } from '@server/@api-auth/auth.route';
+import { router as userRouter } from '@server/@api-user/user.route';
 import { router as githubsyncRouter } from '@githubsync/githubsync.route';
-import { configurePassport } from '@auth/passport/passport.auth.config';
+import { configurePassport } from '@server/@api-auth/passport/passport.auth.config';
 
 const dotEnv = dotenv.config();
 dotenvExpand.expand(dotEnv);

@@ -1,5 +1,5 @@
 import express, { IRouter } from 'express';
-import { createIssueController, getIssuesController, getPullRequestsController, getRepositoriesController,getIssueTemplatesController } from '@api-github/github.controller';
+import { createIssueController, getIssuesController, getPullRequestsController, getRepositoriesController,getIssueTemplatesController } from '@api-external/github.controller';
 
 const router: IRouter = express.Router();
 

@@ -1,5 +1,5 @@
 import {Strategy} from 'passport-local';
-import { UserModel as User } from '@user/user.model';
+import { UserModel as User } from '@server/@api-user/user.model';
 import { DoneCallback } from 'passport';
 import { success } from '@lib/helpers';
 

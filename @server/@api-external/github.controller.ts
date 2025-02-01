@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { success } from '@lib/helpers';
-import { createIssueService, getIssuesService, getPullRequestsService, getRepositoriesService,getIssueTemplatesService } from '@api-github/github.service';
+import { createIssueService, getIssuesService, getPullRequestsService, getRepositoriesService,getIssueTemplatesService } from '@api-external/github.service';
 
 let response: { [key: string]: unknown } = {};
 const message = {

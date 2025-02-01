@@ -1,10 +1,10 @@
 import {Application} from 'express';
 import passport from 'passport';
-import { localLoginStrategy } from '@auth/passport/strategies/local.login.strategy';
-import { localSignupStrategy } from '@auth/passport/strategies/local.signup.strategy';
-import { jwtStrategy } from '@auth/passport/strategies/jwt.strategy';
-import { googleStrategy } from '@auth/passport/strategies/google.strategy';
-import { githubStrategy } from '@auth/passport/strategies/github.strategy';
+import { localLoginStrategy } from '@server/@api-auth/passport/strategies/local.login.strategy';
+import { localSignupStrategy } from '@server/@api-auth/passport/strategies/local.signup.strategy';
+import { jwtStrategy } from '@server/@api-auth/passport/strategies/jwt.strategy';
+import { googleStrategy } from '@server/@api-auth/passport/strategies/google.strategy';
+import { githubStrategy } from '@server/@api-auth/passport/strategies/github.strategy';
 
 export const configurePassport = (app: Application) => {
   passport.use('local-signup',localSignupStrategy); // basic signup with email and password

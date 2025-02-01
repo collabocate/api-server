@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import passport from 'passport';
 import { Payload, ReqUser } from '@ts-types/index';
-import { UserRole } from "@user/user.model";
+import { UserRole } from "@server/@api-user/user.model";
 import { unAuthorizedErr } from '@lib/errors/Errors';
 
 // -----------------------------------------------------------------------------------------------------------//
