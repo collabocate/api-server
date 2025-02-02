@@ -35,7 +35,7 @@
     //------------------------------
     "baseUrl": "./", // This must be specified if "paths" is.
     "paths": {
-        "@githubsync/*": ["@server/@api-manager_githubsync/*"],
+        "@collabocate/*": ["@server/@api-manager_collabocate/*"],
         "@user/*": ["@server/@api-user/*"],
         "@auth/*": ["@server/@api-auth/*"],
         "@api-community/*": ["@server/@api-home/*"],

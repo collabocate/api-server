@@ -1,23 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  createGithubSyncService,
-  getGithubSyncService,
-  getOneGithubSyncService,
-  deleteOneGithubSyncService,
-  updateOneGithubSyncService,
-} from '@githubsync/githubsync.service';
+  createCollabocateInstanceService,
+  getCollabocateInstanceService,
+  getOneCollabocateInstanceService,
+  deleteOneCollabocateInstanceService,
+  updateOneCollabocateInstanceService,
+} from '@collabocate/instance.service';
 import { success } from '@lib/helpers';
 // import { ReqUser } from '@ts-types/index';
 // import { error } from '@lib/helpers';
 
-const routeName = 'githubsync';
-const item = `${routeName}-item`;
+const routeName = 'collabocate';
+const item = `${routeName} instance`;
 
 let response: { [key: string]: unknown } = {};
 
-export const createGithubSyncController = async (req: Request, res: Response, next: NextFunction) => {
+export const createCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const doc = await createGithubSyncService(req.body);
+    const doc = await createCollabocateInstanceService(req.body);
     response = {
       message: `${item} created successfully!`,
       data: {
@@ -39,9 +39,9 @@ export const createGithubSyncController = async (req: Request, res: Response, ne
   }
 }
 
-export const getGithubSyncController = async (req: Request, res: Response, next: NextFunction) => {
+export const getCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const docs = await getGithubSyncService();
+    const docs = await getCollabocateInstanceService();
     response = {
       message: `all ${item}s gotten successfully!`,
       count: docs.length,
@@ -59,17 +59,17 @@ export const getGithubSyncController = async (req: Request, res: Response, next:
         }
       })
     };
-    success(`all ${item} gotten successfully!`);
+    success(`all ${item}s gotten successfully!`);
     return res.status(200).json(response);
   } catch (err) {
     next(err);
   }
 }
 
-export const getOneGithubSyncController = async (req: Request, res: Response, next: NextFunction) => {
+export const getOneCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.settingID;
-    const doc = await getOneGithubSyncService(id);
+    const doc = await getOneCollabocateInstanceService(id);
     response = {
       message: `${item} with id:${id} gotten successfully!`,
       data: {
@@ -91,10 +91,10 @@ export const getOneGithubSyncController = async (req: Request, res: Response, ne
   }
 }
 
-export const deleteOneGithubSyncController = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteOneCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.settingID;
-    await deleteOneGithubSyncService(id);
+    await deleteOneCollabocateInstanceService(id);
     response = {
       message: `${item} with id:${id} deleted successfully!`,
     }
@@ -105,10 +105,10 @@ export const deleteOneGithubSyncController = async (req: Request, res: Response,
   }
 };
 
-export const updateOneGithubSyncController = async (req: Request, res: Response, next: NextFunction) => {
+export const updateOneCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.settingID;
-    const doc = await updateOneGithubSyncService(id, req.body);
+    const doc = await updateOneCollabocateInstanceService(id, req.body);
     response = {
       message: `Update request for ID ${id} successful!`,
       data: {

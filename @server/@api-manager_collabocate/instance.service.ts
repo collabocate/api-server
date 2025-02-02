@@ -1,10 +1,10 @@
 import { badRequestErr, notFoundErr } from '@lib/errors/Errors';
-import { GithubSyncDocument, GithubSyncModel as GithubSync } from '@githubsync/githubsync.model';
+import { CollabocateInstanceDocument, CollabocateInstanceModel as CollabocateInstance } from '@collabocate/instance.model';
 
 
-export const createGithubSyncService = async (requestBody: GithubSyncDocument): Promise<GithubSyncDocument> => {
+export const createCollabocateInstanceService = async (requestBody: CollabocateInstanceDocument): Promise<CollabocateInstanceDocument> => {
   if (Object.keys(requestBody).includes("global") && requestBody.global === true) {
-    const query = await GithubSync.findOne({global: true}).exec();
+    const query = await CollabocateInstance.findOne({global: true}).exec();
     if(query){
       badRequestErr('A global setting already exists, Only One Global Setting can exist');
     }
@@ -17,7 +17,7 @@ export const createGithubSyncService = async (requestBody: GithubSyncDocument): 
     }
   }
 
-  const createGithubSync = new GithubSync({
+  const createCollabocateInstance = new CollabocateInstance({
     global: requestBody.global,
     instance_name: requestBody.instance_name,
     github: {
@@ -25,33 +25,33 @@ export const createGithubSyncService = async (requestBody: GithubSyncDocument): 
       repo_name: requestBody.github.repo_name
     }
   }); 
-  const save = await createGithubSync.save();
+  const save = await createCollabocateInstance.save();
   return save;
 }
 
-export const getGithubSyncService = async () => {
-  const query = await GithubSync.find().sort({'global': -1}).exec();
+export const getCollabocateInstanceService = async () => {
+  const query = await CollabocateInstance.find().sort({'global': -1}).exec();
   return query;
 }
 
-export const getOneGithubSyncService = async (paramsId: string) => {
-  const query = await GithubSync.findById(paramsId).exec();
+export const getOneCollabocateInstanceService = async (paramsId: string) => {
+  const query = await CollabocateInstance.findById(paramsId).exec();
   if(!query){
     notFoundErr('No record found for provided ID');
   }
   return query;
 }
 
-export const deleteOneGithubSyncService = async (paramsId: string) => {
-  const query = await GithubSync.deleteOne({ _id: paramsId }).exec();
+export const deleteOneCollabocateInstanceService = async (paramsId: string) => {
+  const query = await CollabocateInstance.deleteOne({ _id: paramsId }).exec();
   if (query.deletedCount < 1){
     notFoundErr('No record found for provided ID to be deleted');
   }
   return query;
 }
 
-export const updateOneGithubSyncService = async (paramsId: string, requestBody: GithubSyncDocument) => {
-  const query = await GithubSync.findById(paramsId).exec();
+export const updateOneCollabocateInstanceService = async (paramsId: string, requestBody: CollabocateInstanceDocument) => {
+  const query = await CollabocateInstance.findById(paramsId).exec();
   if(!query){
     notFoundErr('No record found for provided ID');
   }
