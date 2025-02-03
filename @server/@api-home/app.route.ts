@@ -1,5 +1,5 @@
 import express, { IRouter } from 'express';
-import { getAppController } from '@api-community/app.controller';
+import { getAppController } from '@server/@api-home/app.controller';
 
 const router: IRouter = express.Router();
 

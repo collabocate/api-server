@@ -35,11 +35,11 @@
     //------------------------------
     "baseUrl": "./", // This must be specified if "paths" is.
     "paths": {
-        "@githubsync/*": ["@server/@api-community/settings/githubsync/*"],
-        "@user/*": ["@server/@api-community/user/*"],
-        "@auth/*": ["@server/@api-community/auth/*"],
-        "@api-community/*": ["@server/@api-community/*"],
-        "@api-github/*": ["@server/@api-github/*"],
+        "@collabocate/*": ["@server/@api-manager_collabocate/*"],
+        "@user/*": ["@server/@api-user/*"],
+        "@auth/*": ["@server/@api-auth/*"],
+        "@api-community/*": ["@server/@api-home/*"],
+        "@api-external/*": ["@server/@api-external/*"],
         "@ts-types/*": ["@server/types/*"],
         "@lib/*": ["@server/lib/*"],
         "@server/*": ["@server/*"],

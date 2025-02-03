@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { UserDocument, UserRole } from "@user/user.model";
+import { UserDocument, UserRole } from "@server/@api-user/user.model";
 
 export interface ReqUser extends Request {
   user?: {
