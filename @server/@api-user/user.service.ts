@@ -67,10 +67,7 @@ export const createAdminUserService = async () => {
 
 //--------------------------------------------------------------------------------------------------//
 export const deleteAllUserService = async () => {
-  const query = await User.deleteMany().exec();
-  if (query.deletedCount < 1){
-    notFoundErr('No record found to be deleted')
-  }
+  const query = await User.deleteMany({role:{$ne: UserRole.Admin}}).exec();
   return query;
 }
 //--------------------------------------------------------------------------------------------------//

@@ -21,7 +21,7 @@ router.put('/update-properties', authenticateUserWithJWT, authorizeByUserRoles([
 router.delete('/delete', authenticateUserWithJWT, authorizeByUserRoles([UserRole.User]), deleteOneUserController);
 
 //-----------------------------------------------------//
-router.delete('/', deleteAllUserController);
+router.delete('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin]), deleteAllUserController);
 //-----------------------------------------------------//
 
 export { router };
