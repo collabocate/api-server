@@ -7,6 +7,7 @@ import {
   updateOneCollabocateInstanceService,
 } from '@collabocate/instance.service';
 import { success } from '@lib/helpers';
+import { ReqUser } from '@ts-types/index';
 // import { ReqUser } from '@ts-types/index';
 // import { error } from '@lib/helpers';
 
@@ -15,21 +16,13 @@ const item = `${routeName} instance`;
 
 let response: { [key: string]: unknown } = {};
 
-export const createCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
+export const createCollabocateInstanceController = async (req: ReqUser, res: Response, next: NextFunction) => {
   try {
-    const doc = await createCollabocateInstanceService(req.body);
+    const doc = await createCollabocateInstanceService(req.user._id, req.body);
     response = {
       message: `${item} created successfully!`,
       data: {
-        _id: doc._id,
-        global: doc.global,
-        instance_name: doc.instance_name,
-        github: {
-          user_name: doc.github.user_name,
-          repo_name: doc.github.repo_name
-        },
-        createAt: doc.createdAt,
-        updatedAt: doc.updatedAt
+        doc
       },
     }
     success(`${item} CREATED successfully!`);
@@ -46,17 +39,7 @@ export const getCollabocateInstanceController = async (req: Request, res: Respon
       message: `all ${item}s gotten successfully!`,
       count: docs.length,
       data: docs.map(doc => {
-        return {
-          _id: doc._id,
-          global: doc.global,
-          instance_name: doc.instance_name,
-          github: {
-            user_name: doc.github.user_name,
-            repo_name: doc.github.repo_name
-          },
-          createAt: doc.createdAt,
-          updatedAt: doc.updatedAt
-        }
+        return(doc)
       })
     };
     success(`all ${item}s gotten successfully!`);
@@ -66,22 +49,15 @@ export const getCollabocateInstanceController = async (req: Request, res: Respon
   }
 }
 
-export const getOneCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
+export const getOneCollabocateInstanceController = async (req: ReqUser, res: Response, next: NextFunction) => {
   try {
+    const user_id = req.user._id
     const id = req.params.settingID;
-    const doc = await getOneCollabocateInstanceService(id);
+    const doc = await getOneCollabocateInstanceService(user_id, id);
     response = {
       message: `${item} with id:${id} gotten successfully!`,
       data: {
-        _id: doc._id,
-        global: doc.global,
-        instance_name: doc.instance_name,
-        github: {
-          user_name: doc.github.user_name,
-          repo_name: doc.github.repo_name
-        },
-        createAt: doc.createdAt,
-        updatedAt: doc.updatedAt
+        doc
       }
     }
     success(`${item} with id:${id} gotten successfully!`);

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from "bcrypt";
+import { CollabocateInstanceDocument } from '@collabocate/instance.model';
 
 export enum UserRole {
   Admin = 'admin',
@@ -14,6 +15,7 @@ export interface UserDocument extends mongoose.Document {
   role: UserRole;
   createdAt?: Date;
   updatedAt?: Date;
+  instance: CollabocateInstanceDocument[];
 }
 
 const collectionName = 'user';
@@ -27,7 +29,10 @@ const UserSchema = new mongoose.Schema({
   },
   email_verified: { type: Boolean, required:true, default: false},
   password: { type: String, required: true },
-  role: { type: String, required: true, default: UserRole.User}
+  role: { type: String, required: true, default: UserRole.User },
+  instance: [
+    { type: mongoose.Schema.Types.ObjectId, ref:'collabocate-instance' }
+  ]
 },
 {
   timestamps: true,

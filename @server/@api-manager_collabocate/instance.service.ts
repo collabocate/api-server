@@ -1,8 +1,14 @@
 import { badRequestErr, notFoundErr } from '@lib/errors/Errors';
 import { CollabocateInstanceDocument, CollabocateInstanceModel as CollabocateInstance } from '@collabocate/instance.model';
+import { UserModel as User } from '@server/@api-user/user.model';
 
 
-export const createCollabocateInstanceService = async (requestBody: CollabocateInstanceDocument): Promise<CollabocateInstanceDocument> => {
+export const createCollabocateInstanceService = async (user_id: string, requestBody: CollabocateInstanceDocument): Promise<CollabocateInstanceDocument> => {
+  const user = await User.findById(user_id).exec();
+  if(!user){
+    notFoundErr('No record found for provided ID');
+  }
+  
   if (Object.keys(requestBody).includes("global") && requestBody.global === true) {
     const query = await CollabocateInstance.findOne({global: true}).exec();
     if(query){
@@ -23,19 +29,25 @@ export const createCollabocateInstanceService = async (requestBody: CollabocateI
     github: {
       user_name: requestBody.github.user_name,
       repo_name: requestBody.github.repo_name
-    }
-  }); 
-  const save = await createCollabocateInstance.save();
-  return save;
+    },
+    user: user
+  });
+
+  const savedInstance = await createCollabocateInstance.save();
+  
+  user.instance.push(createCollabocateInstance)
+  await user.save()
+  
+  return savedInstance;
 }
 
 export const getCollabocateInstanceService = async () => {
-  const query = await CollabocateInstance.find().sort({'global': -1}).exec();
+  const query = await CollabocateInstance.find().populate('user').sort({'global': -1}).exec();
   return query;
 }
 
-export const getOneCollabocateInstanceService = async (paramsId: string) => {
-  const query = await CollabocateInstance.findById(paramsId).exec();
+export const getOneCollabocateInstanceService = async (user_id: string, paramsId: string) => {
+  const query = await CollabocateInstance.findOne({ _id: paramsId, user: user_id }).populate('user').exec();
   if(!query){
     notFoundErr('No record found for provided ID');
   }

@@ -51,14 +51,7 @@ export const getOneUserController = async (req: ReqUser, res: Response, next: Ne
     const response = {
       success: true,
       data: {
-        user: {
-          _id: user._id,
-          email: user.email,
-          email_verified: user.email_verified,
-          role: user.role,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-        }
+        user
       },
       message: `SUCCESS: User succesfully retrieved`,
     };
