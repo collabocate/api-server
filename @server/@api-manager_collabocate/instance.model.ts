@@ -1,3 +1,4 @@
+import { UserDocument } from '@user/user.model';
 import mongoose from 'mongoose';
 
 export interface CollabocateInstanceDocument extends mongoose.Document {
@@ -10,6 +11,7 @@ export interface CollabocateInstanceDocument extends mongoose.Document {
   };
   createdAt?: Date;
   updatedAt?: Date;
+  user: UserDocument;
 }
 
 const collectionName = 'collabocate-instance';
@@ -21,6 +23,7 @@ const CollabocateInstanceSchema = new mongoose.Schema({
     user_name: { type: String, required: true },
     repo_name: { type: String, required: true }
   },
+  user: { type: mongoose.Schema.Types.ObjectId, ref:"user", required: true }
 },
 {
   timestamps: true,

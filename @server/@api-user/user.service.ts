@@ -8,7 +8,7 @@ export const getAllUsersService = async () => {
 };
 
 export const getOneUserService = async (paramsId: string) => {
-  const query = await User.findById(paramsId).exec();
+  const query = await User.findById(paramsId).populate('instance').exec();
   if(!query){
     notFoundErr('No record found for provided ID');
   }
