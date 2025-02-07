@@ -44,7 +44,7 @@ export const authorizeByUserRoles = (allowedRoles: UserRole[]) => {
       if (roleIsVerified) {
         return next();
       }
-      unAuthorizedErr(`only [${allowedRoles}] have access to this route`);
+      unAuthorizedErr("Unauthorized: Can't access this resource");
 
     } catch (err) {
       next(err)
