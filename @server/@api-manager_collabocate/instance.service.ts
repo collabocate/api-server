@@ -35,19 +35,19 @@ export const createCollabocateInstanceService = async (user_id: string, requestB
 
   const savedInstance = await createCollabocateInstance.save();
   
-  user.instance.push(createCollabocateInstance)
+  user.instance.push(savedInstance)
   await user.save()
   
   return savedInstance;
 }
 
 export const getCollabocateInstanceService = async () => {
-  const query = await CollabocateInstance.find().populate('user').sort({'global': -1}).exec();
+  const query = await CollabocateInstance.find().sort({'global': -1}).exec();
   return query;
 }
 
 export const getOneCollabocateInstanceService = async (user_id: string, paramsId: string) => {
-  const query = await CollabocateInstance.findOne({ _id: paramsId, user: user_id }).populate('user').exec();
+  const query = await CollabocateInstance.findOne({ _id: paramsId, user: user_id }).exec();
   if(!query){
     notFoundErr('No record found for provided ID');
   }

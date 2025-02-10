@@ -11,10 +11,10 @@ import { UserRole } from '@user/user.model';
 
 const router: IRouter = express.Router();
 
-router.get('/', getCollabocateInstanceController);
+router.get('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin]), getCollabocateInstanceController);
 router.post('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), createCollabocateInstanceController);
 router.get('/:settingID', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), getOneCollabocateInstanceController);
-router.patch('/:settingID', updateOneCollabocateInstanceController);
-router.delete('/:settingID', deleteOneCollabocateInstanceController);
+router.patch('/:settingID', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), updateOneCollabocateInstanceController);
+router.delete('/:settingID', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), deleteOneCollabocateInstanceController);
 
 export { router };
