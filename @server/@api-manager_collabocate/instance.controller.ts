@@ -22,8 +22,17 @@ export const createCollabocateInstanceController = async (req: ReqUser, res: Res
     response = {
       message: `${item} created successfully!`,
       data: {
-        doc
-      },
+        _id: doc._id,
+        global: doc.global,
+        instance_name: doc.instance_name,
+        github: {
+          user_name: doc.github.user_name,
+          repo_name: doc.github.repo_name
+        },
+        user_id: doc.user._id,
+        createAt: doc.createdAt,
+        updatedAt: doc.updatedAt
+      },   
     }
     success(`${item} CREATED successfully!`);
     return res.status(201).json(response);  
@@ -39,7 +48,18 @@ export const getCollabocateInstanceController = async (req: Request, res: Respon
       message: `all ${item}s gotten successfully!`,
       count: docs.length,
       data: docs.map(doc => {
-        return(doc)
+        return {
+          _id: doc._id,
+          global: doc.global,
+          instance_name: doc.instance_name,
+          github: {
+            user_name: doc.github.user_name,
+            repo_name: doc.github.repo_name
+          },
+          user_id: doc.user._id,
+          createAt: doc.createdAt,
+          updatedAt: doc.updatedAt
+        }
       })
     };
     success(`all ${item}s gotten successfully!`);
@@ -57,7 +77,16 @@ export const getOneCollabocateInstanceController = async (req: ReqUser, res: Res
     response = {
       message: `${item} with id:${id} gotten successfully!`,
       data: {
-        doc
+        _id: doc._id,
+        global: doc.global,
+        instance_name: doc.instance_name,
+        github: {
+          user_name: doc.github.user_name,
+          repo_name: doc.github.repo_name
+        },
+        user_id: doc.user._id,
+        createAt: doc.createdAt,
+        updatedAt: doc.updatedAt
       }
     }
     success(`${item} with id:${id} gotten successfully!`);
@@ -95,6 +124,7 @@ export const updateOneCollabocateInstanceController = async (req: Request, res: 
           user_name: doc.github.user_name,
           repo_name: doc.github.repo_name
         },
+        user_id: doc.user._id,
         createAt: doc.createdAt,
         updatedAt: doc.updatedAt
       }

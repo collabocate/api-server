@@ -30,6 +30,19 @@ export const getAllUsersController = async (req: Request, res: Response, next: N
             email: user.email,
             email_verified: user.email_verified,
             role: user.role,
+            instances: user.instance.map(instance => {
+              return {
+                _id: instance._id,
+                global: instance.global,
+                instance_name: instance.instance_name,
+                github: {
+                  user_name: instance.github.user_name,
+                  repo_name: instance.github.repo_name
+                },
+                createAt: instance.createdAt,
+                updatedAt: instance.updatedAt
+              }
+            }),
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           }
@@ -51,7 +64,25 @@ export const getOneUserController = async (req: ReqUser, res: Response, next: Ne
     const response = {
       success: true,
       data: {
-        user
+        _id: user._id,
+        email: user.email,
+        email_verified: user.email_verified,
+        role: user.role,
+        instances: user.instance.map(instance => {
+          return {
+            _id: instance._id,
+            global: instance.global,
+            instance_name: instance.instance_name,
+            github: {
+              user_name: instance.github.user_name,
+              repo_name: instance.github.repo_name
+            },
+            createAt: instance.createdAt,
+            updatedAt: instance.updatedAt
+          }
+        }),
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
       message: `SUCCESS: User succesfully retrieved`,
     };
