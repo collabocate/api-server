@@ -32,7 +32,7 @@ export const createCollabocateInstanceController = async (req: ReqUser, res: Res
         user_id: doc.user._id,
         createAt: doc.createdAt,
         updatedAt: doc.updatedAt
-      },   
+      },
     }
     success(`${item} CREATED successfully!`);
     return res.status(201).json(response);  
