@@ -41,8 +41,13 @@ export const createCollabocateInstanceService = async (user_id: string, requestB
   return savedInstance;
 }
 
-export const getCollabocateInstanceService = async () => {
+export const getAllCollabocateInstanceService = async () => {
   const query = await CollabocateInstance.find().sort({'global': -1}).exec();
+  return query;
+}
+
+export const getCollabocateInstanceService = async (user_id: string) => {
+  const query = await CollabocateInstance.find({user:{_id: user_id}}).sort({'global': -1}).exec();
   return query;
 }
 

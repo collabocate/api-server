@@ -5,10 +5,10 @@ import {
   getOneCollabocateInstanceService,
   deleteOneCollabocateInstanceService,
   updateOneCollabocateInstanceService,
+  getAllCollabocateInstanceService,
 } from '@collabocate/instance.service';
 import { success } from '@lib/helpers';
 import { ReqUser } from '@ts-types/index';
-// import { ReqUser } from '@ts-types/index';
 // import { error } from '@lib/helpers';
 
 const routeName = 'collabocate';
@@ -41,11 +41,40 @@ export const createCollabocateInstanceController = async (req: ReqUser, res: Res
   }
 }
 
-export const getCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const docs = await getCollabocateInstanceService();
+    const docs = await getAllCollabocateInstanceService();
     response = {
       message: `all ${item}s gotten successfully!`,
+      count: docs.length,
+      data: docs.map(doc => {
+        return {
+          _id: doc._id,
+          global: doc.global,
+          instance_name: doc.instance_name,
+          github: {
+            user_name: doc.github.user_name,
+            repo_name: doc.github.repo_name
+          },
+          user_id: doc.user._id,
+          createAt: doc.createdAt,
+          updatedAt: doc.updatedAt
+        }
+      })
+    };
+    success(`all ${item}s gotten successfully!`);
+    return res.status(200).json(response);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const getCollabocateInstanceController = async (req: ReqUser, res: Response, next: NextFunction) => {
+  try {
+    const user_id = req.user._id
+    const docs = await getCollabocateInstanceService(user_id);
+    response = {
+      message: `all ${item}s for ${user_id} gotten successfully!`,
       count: docs.length,
       data: docs.map(doc => {
         return {
