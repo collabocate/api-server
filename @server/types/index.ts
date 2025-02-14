@@ -9,4 +9,11 @@ export interface ReqUser extends Request {
   }
 }
 
+export interface ChatMessage {
+  senderId: string;
+  receiverId: string;
+  content: string;
+  timestamp: Date;
+}
+
 export type Payload = Pick<UserDocument, "_id" | "email" | "role">;
