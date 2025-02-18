@@ -1,6 +1,8 @@
 import { badRequestErr, notFoundErr } from '@lib/errors/Errors';
 import { CollabocateInstanceDocument, CollabocateInstanceModel as CollabocateInstance } from '@collabocate/instance.model';
 import { UserModel as User } from '@server/@api-user/user.model';
+import { TrashModel as Trash } from '@trash/trash.model';
+import mongoose from 'mongoose';
 
 
 export const createCollabocateInstanceService = async (user_id: string, requestBody: CollabocateInstanceDocument): Promise<CollabocateInstanceDocument> => {
@@ -59,12 +61,32 @@ export const getOneCollabocateInstanceService = async (user_id: string, paramsId
   return query;
 }
 
-export const deleteOneCollabocateInstanceService = async (paramsId: string) => {
-  const query = await CollabocateInstance.deleteOne({ _id: paramsId }).exec();
-  if (query.deletedCount < 1){
-    notFoundErr('No record found for provided ID to be deleted');
+export const deleteOneCollabocateInstanceService = async (user_id: string, paramsId: string) => {
+  const user = await User.findById(user_id).exec();
+  if(!user){
+    notFoundErr('No record found for provided User ID');
   }
-  return query;
+
+  const collectionName = 'collabocate-instance';
+  const Model = mongoose.models[collectionName]; // Dynamically get the Mongoose model
+
+  if (!Model) {
+    notFoundErr(`No record found for provided ${collectionName} ID to be deleted`)
+  }
+  const model = await Model.findById(paramsId).exec()
+
+  // move document to trash before deleting
+  const createTrash = await Trash.create({
+    collectionName: 'collabocate-instance',
+    deletedDocument: model.toObject(),
+    deletedAt: new Date(),
+    user: user
+  })
+
+  await Model.deleteOne({ _id: paramsId }).exec();
+  
+  const trashDoc = await createTrash.save();
+  return trashDoc;
 }
 
 export const updateOneCollabocateInstanceService = async (paramsId: string, requestBody: CollabocateInstanceDocument) => {

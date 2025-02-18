@@ -35,6 +35,7 @@
     //------------------------------
     "baseUrl": "./", // This must be specified if "paths" is.
     "paths": {
+        "@trash/*": ["@server/@api-trash/*"],
         "@collabocate/*": ["@server/@api-manager_collabocate/*"],
         "@user/*": ["@server/@api-user/*"],
         "@auth/*": ["@server/@api-auth/*"],
