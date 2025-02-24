@@ -23,9 +23,9 @@ export const restoreOneTrashController = async (req: ReqUser, res: Response, nex
     await restoreOneTrashService(user_id, param_id);
 
     response = {
-      message: `${item} with id:${param_id} deleted successfully!`,
+      message: `${item} with id:${param_id} restored successfully and deleted from trash!`,
     }
-    success(`${item} with id:${param_id} deleted successfully!`);
+    success(`${item} with id:${param_id} restored successfully and deleted from trash!`);
     return res.status(200).json(response); 
   } catch (err) {
     next(err);
@@ -43,8 +43,10 @@ export const getTrashController = async (req: ReqUser, res: Response, next: Next
         return {
           _id: doc._id,
           collectionName: doc.collectionName,
-          deletedDocument: doc.deletedDocument,
-          deletedAt: doc.deletedAt,
+          trashedDocument: doc.trashedDocument,
+          trashedAt: doc.trashedAt,
+          toBeDeletedAt: doc.toBeDeletedAt,
+          trashLifetime: (doc.toBeDeletedAt.getTime() - Date.now())/1000,
           user: doc.user._id
         }
       })
@@ -66,8 +68,10 @@ export const getOneTrashController = async (req: ReqUser, res: Response, next: N
       data: {
         _id: doc._id,
         collectionName: doc.collectionName,
-        deletedDocument: doc.deletedDocument,
-        deletedAt: doc.deletedAt,
+        trashedDocument: doc.trashedDocument,
+        trashedAt: doc.trashedAt,
+        toBeDeletedAt: doc.toBeDeletedAt,
+        trashLifetime: (doc.toBeDeletedAt.getTime() - Date.now())/1000,
         user: doc.user._id
       }
     }
@@ -89,8 +93,10 @@ export const getOneSpecificTrashController = async (req: ReqUser, res: Response,
       data: {
         _id: doc._id,
         collectionName: doc.collectionName,
-        deletedDocument: doc.deletedDocument,
-        deletedAt: doc.deletedAt,
+        trashedDocument: doc.trashedDocument,
+        trashedAt: doc.trashedAt,
+        toBeDeletedAt: doc.toBeDeletedAt,
+        trashLifetime: (doc.toBeDeletedAt.getTime() - Date.now())/1000,
         user: doc.user._id
       }
     }

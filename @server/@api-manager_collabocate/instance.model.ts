@@ -14,7 +14,7 @@ export interface CollabocateInstanceDocument extends mongoose.Document {
   user: UserDocument;
 }
 
-const collectionName = 'collabocate-instance';
+export const collectionName = 'collabocate-instance';
 
 const CollabocateInstanceSchema = new mongoose.Schema({
   global: { type: Boolean, default: false},

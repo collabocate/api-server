@@ -133,13 +133,13 @@ export const deleteOneCollabocateInstanceController = async (req: ReqUser, res: 
     const doc = await deleteOneCollabocateInstanceService(user_id, param_id);
 
     response = {
-      message: `${item} with id:${param_id} deleted successfully!`,
+      message: `${item} with id:${param_id} trashed successfully!`,
       trashId: doc._id,
       trashCollectionName: doc.collectionName,
       userId: doc.user._id
     }
     
-    success(`${item} with id:${param_id} deleted successfully!`);
+    success(`${item} with id:${param_id} trashed successfully!`);
     return res.status(200).json(response); 
   } catch (err) {
     next(err);
