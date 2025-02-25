@@ -1,6 +1,12 @@
 import { badRequestErr, notFoundErr } from '@lib/errors/Errors';
-import { CollabocateInstanceDocument, CollabocateInstanceModel as CollabocateInstance } from '@collabocate/instance.model';
+import {
+  CollabocateInstanceDocument,
+  CollabocateInstanceModel as CollabocateInstance,
+  collectionName as collabocateCollectionName
+} from '@collabocate/instance.model';
 import { UserModel as User } from '@server/@api-user/user.model';
+import { EXPIRATION_IN_SEC, TrashModel as Trash } from '@trash/trash.model';
+import mongoose from 'mongoose';
 
 
 export const createCollabocateInstanceService = async (user_id: string, requestBody: CollabocateInstanceDocument): Promise<CollabocateInstanceDocument> => {
@@ -59,12 +65,36 @@ export const getOneCollabocateInstanceService = async (user_id: string, paramsId
   return query;
 }
 
-export const deleteOneCollabocateInstanceService = async (paramsId: string) => {
-  const query = await CollabocateInstance.deleteOne({ _id: paramsId }).exec();
-  if (query.deletedCount < 1){
-    notFoundErr('No record found for provided ID to be deleted');
+export const deleteOneCollabocateInstanceService = async (user_id: string, paramsId: string) => {
+  const user = await User.findById(user_id).exec();
+  if(!user){
+    notFoundErr('No record found for provided User ID');
   }
-  return query;
+
+  const collectionName = collabocateCollectionName;
+  const Model = mongoose.models[collectionName]; // Dynamically get the Mongoose model
+
+  if (!Model) {
+    notFoundErr(`No record found for provided ${collectionName} ID to be trashed`)
+  }
+  const model = await Model.findById(paramsId).exec()
+
+  // move document to trash before deleting
+  const trashedAt = new Date();
+  const toBeDeletedAt = new Date(trashedAt.getTime() + EXPIRATION_IN_SEC * 1000);
+
+  const createTrash = await Trash.create({
+    collectionName: collectionName,
+    trashedDocument: model.toObject(),
+    trashedAt,
+    toBeDeletedAt,
+    user: user
+  })
+
+  await Model.deleteOne({ _id: paramsId }).exec();
+  
+  const trashDoc = await createTrash.save();
+  return trashDoc;
 }
 
 export const updateOneCollabocateInstanceService = async (paramsId: string, requestBody: CollabocateInstanceDocument) => {

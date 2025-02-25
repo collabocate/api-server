@@ -12,6 +12,7 @@ import { router as externalApiRouter } from '@api-external/github.route';
 import { router as authRouter } from '@server/@api-auth/auth.route';
 import { router as userRouter } from '@server/@api-user/user.route';
 import { router as collabocateInstanceRouter } from '@collabocate/instance.route';
+import { router as trashRouter } from '@server/@api-trash/trash.route';
 import { configurePassport } from '@server/@api-auth/passport/passport.auth.config';
 
 const dotEnv = dotenv.config();
@@ -33,6 +34,7 @@ app.use('/external/github', externalApiRouter);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/collabocate/instance', collabocateInstanceRouter)
+app.use('/trash', trashRouter);
 //==========================
 
 

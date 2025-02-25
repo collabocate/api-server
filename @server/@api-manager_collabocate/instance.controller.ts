@@ -125,14 +125,21 @@ export const getOneCollabocateInstanceController = async (req: ReqUser, res: Res
   }
 }
 
-export const deleteOneCollabocateInstanceController = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteOneCollabocateInstanceController = async (req: ReqUser, res: Response, next: NextFunction) => {
   try {
-    const id = req.params.settingID;
-    await deleteOneCollabocateInstanceService(id);
+    const param_id = req.params.settingID;
+    const user_id: string = req.user._id;
+
+    const doc = await deleteOneCollabocateInstanceService(user_id, param_id);
+
     response = {
-      message: `${item} with id:${id} deleted successfully!`,
+      message: `${item} with id:${param_id} trashed successfully!`,
+      trashId: doc._id,
+      trashCollectionName: doc.collectionName,
+      userId: doc.user._id
     }
-    success(`${item} with id:${id} deleted successfully!`);
+    
+    success(`${item} with id:${param_id} trashed successfully!`);
     return res.status(200).json(response); 
   } catch (err) {
     next(err);
