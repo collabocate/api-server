@@ -4,16 +4,19 @@ import mongoose from 'mongoose';
 
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
+import { CollabocateInstanceDocument } from '@collabocate/instance.model';
 
 const dotEnv = dotenv.config();
 dotenvExpand.expand(dotEnv);
 
 export const EXPIRATION_IN_SEC = Number(process.env.TRASH_LIFETIME_IN_DAYS)*24*60*60 || 7*24*60*60; // defaults to 7 days (in sec)
 
+type TrashedDocumentType = CollabocateInstanceDocument
+
 export interface TrashDocument extends mongoose.Document {
   _id?: string;
   collectionName: string;
-  trashedDocument: any;
+  trashedDocument: TrashedDocumentType;
   trashedAt: Date;
   toBeDeletedAt: Date;
   trashLifetime?: number;
