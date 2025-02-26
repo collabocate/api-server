@@ -37,6 +37,7 @@
     "paths": {
         "@trash/*": ["@server/@api-trash/*"],
         "@collabocate/*": ["@server/@api-manager_collabocate/*"],
+        "@admin/*": ["@server/@api-admin/*"],
         "@user/*": ["@server/@api-user/*"],
         "@auth/*": ["@server/@api-auth/*"],
         "@api-community/*": ["@server/@api-home/*"],

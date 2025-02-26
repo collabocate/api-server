@@ -1,27 +1,16 @@
 import express, { IRouter } from 'express';
 import {
-  getAllUsersController,
   getOneUserController,
-  deleteOneUserController,
-  updateOneUserPropertyValueController,
-  updateUserPropertyValuesController,
-  deleteAllUserController,
+  updateOneUserController,
+  deleteOneUserController
 } from '@server/@api-user/user.controller';
 import { UserRole } from '@server/@api-user/user.model';
 import { authenticateUserWithJWT, authorizeByUserRoles } from '@server/@api-auth/middlewares/auth.middleware';
 
 const router: IRouter = express.Router();
 
-router.get('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin]), getAllUsersController);
-router.get('/get-properties', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), getOneUserController);
-
-router.patch('/update-any-property', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), updateOneUserPropertyValueController);
-router.put('/update-properties', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), updateUserPropertyValuesController);
-
-router.delete('/delete', authenticateUserWithJWT, authorizeByUserRoles([UserRole.User]), deleteOneUserController);
-
-//-----------------------------------------------------//
-router.delete('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin]), deleteAllUserController);
-//-----------------------------------------------------//
+router.get('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.User, UserRole.Admin]), getOneUserController);
+router.patch('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.User, UserRole.Admin]), updateOneUserController);
+router.delete('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.User]), deleteOneUserController);
 
 export { router };
