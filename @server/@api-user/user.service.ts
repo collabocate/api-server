@@ -11,8 +11,8 @@ export const getOneUserService = async (paramsId: string) => {
 };
 
 export const updateOneUserService = async (paramsId: string, requestBody: UserDocument) => {
-  if (requestBody.role || requestBody.email || requestBody.email_verified) {
-    badRequestErr('<role> or <email> or <email_verified> property update no allowed')
+  if (requestBody.role) {
+    badRequestErr('<role> property update not allowed')
   }
 
   const query = await User.findById(paramsId).exec();

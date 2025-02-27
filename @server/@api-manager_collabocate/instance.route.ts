@@ -1,6 +1,5 @@
 import express, { IRouter } from 'express';
 import {
-  getAllCollabocateInstanceController,
   createCollabocateInstanceController,
   getCollabocateInstanceController,
   getOneCollabocateInstanceController,

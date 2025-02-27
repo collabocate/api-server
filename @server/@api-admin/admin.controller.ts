@@ -1,11 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
 import {
   createAdminUserService,
 } from './admin.service';
 import { error } from '@lib/helpers';
-
-
-let response: { [key: string]: unknown } = {};
 
 export const createAdminUserController = async () => {
   try {

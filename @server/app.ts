@@ -10,6 +10,7 @@ import { notFoundErr } from '@lib/errors/Errors';
 import { router as appRouter } from '@server/@api-home/app.route';
 import { router as externalApiRouter } from '@api-external/github.route';
 import { router as authRouter } from '@server/@api-auth/auth.route';
+import { router as adminRouter } from '@server/@api-admin/admin.route';
 import { router as userRouter } from '@server/@api-user/user.route';
 import { router as collabocateInstanceRouter } from '@collabocate/instance.route';
 import { router as trashRouter } from '@server/@api-trash/trash.route';
@@ -32,6 +33,7 @@ configurePassport(app);
 app.use('/', appRouter);
 app.use('/external/github', externalApiRouter);
 app.use('/auth', authRouter);
+app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 app.use('/collabocate/instance', collabocateInstanceRouter)
 app.use('/trash', trashRouter);
