@@ -1,5 +1,6 @@
 import express, { IRouter } from 'express';
 import {
+  getAllCollabocateInstanceController,
   createCollabocateInstanceController,
   getCollabocateInstanceController,
   getOneCollabocateInstanceController,
@@ -11,6 +12,7 @@ import { UserRole } from '@user/user.model';
 
 const router: IRouter = express.Router();
 
+router.get('/all', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin]), getAllCollabocateInstanceController);
 router.get('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), getCollabocateInstanceController);
 router.post('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), createCollabocateInstanceController);
 router.get('/:settingID', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), getOneCollabocateInstanceController);

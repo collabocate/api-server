@@ -2,6 +2,11 @@ import { badRequestErr, notFoundErr } from '@lib/errors/Errors';
 import { UserDocument, UserModel as User, UserRole } from '@server/@api-user/user.model';
 
 
+export const getAllUsersService = async () => {
+  const query = await User.find({role:{$ne: UserRole.Admin}}).populate('instance').exec();
+  return query;
+};
+
 export const getOneUserService = async (paramsId: string) => {
   const query = await User.findById(paramsId).populate('instance').exec();
   if(!query){
@@ -9,6 +14,14 @@ export const getOneUserService = async (paramsId: string) => {
   }
   return query;
 };
+
+export const deleteOneUserService = async (paramsId: string) => {
+  const query = await User.deleteOne({ _id: paramsId }).exec();
+  if (query.deletedCount < 1){
+    notFoundErr('No record found for provided ID to be deleted')
+  }
+  return query;
+}
 
 export const updateOneUserService = async (paramsId: string, requestBody: UserDocument) => {
   if (requestBody.role) {
@@ -25,20 +38,20 @@ export const updateOneUserService = async (paramsId: string, requestBody: UserDo
   return updatedQuery;
 };
 
-export const deleteOneUserService = async (paramsId: string) => {
-  const query = await User.deleteOne({ _id: paramsId }).exec();
-  if (query.deletedCount < 1){
-    notFoundErr('No record found for provided ID to be deleted')
+export const createAdminUserService = async () => {
+  let adminUser = await User.findOne({ role: UserRole.Admin }).exec();
+  if (!adminUser) {
+    const createAdminUser = new User({
+      email: "admin@admin.com",
+      password: "admin",
+      role: UserRole.Admin,
+    }); 
+    adminUser = await createAdminUser.save();
   }
-  return query;
-}
-
-//--------------------------------- ADMIN RELATED SERVICES -------------------------------------//
-export const getAllUsersService = async () => {
-  const query = await User.find({role:{$ne: UserRole.Admin}}).populate('instance').exec();
-  return query;
+  return adminUser;
 };
 
+//--------------------------------------------------------------------------------------------------//
 export const deleteAllUserService = async () => {
   const query = await User.deleteMany({role:{$ne: UserRole.Admin}}).exec();
   return query;
