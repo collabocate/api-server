@@ -1,4 +1,4 @@
-import { badRequestErr, notFoundErr } from '@lib/errors/Errors';
+import { notFoundErr } from '@lib/errors/Errors';
 import { UserDocument, UserModel as User, UserRole } from '@server/@api-user/user.model';
 
 
@@ -24,10 +24,6 @@ export const deleteOneUserService = async (paramsId: string) => {
 }
 
 export const updateOneUserService = async (paramsId: string, requestBody: UserDocument) => {
-  if (requestBody.role) {
-    badRequestErr('<role> property update not allowed')
-  }
-
   const query = await User.findById(paramsId).exec();
   if(!query){
     notFoundErr('No record found for provided ID');
