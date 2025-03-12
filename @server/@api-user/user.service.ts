@@ -16,9 +16,9 @@ export const getOneUserService = async (paramsId: string) => {
 };
 
 export const deleteOneUserService = async (paramsId: string) => {
-  const query = await User.deleteOne({ _id: paramsId }).exec();
+  const query = await User.deleteOne({ _id: paramsId, role:{$ne: UserRole.Admin} }).exec();
   if (query.deletedCount < 1){
-    notFoundErr('No record found for provided ID to be deleted')
+    notFoundErr('Delete Unsusseccful: Invalid ID or trying to delete the Admin User')
   }
   return query;
 }
