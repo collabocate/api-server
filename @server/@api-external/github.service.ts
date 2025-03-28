@@ -82,3 +82,34 @@ export const getIssueTemplatesService = async () => {
   const data = await response.json();
   return data;
 }
+
+export const getIssueTemplatesContentService = async () => {
+  const response = await fetch(`${process.env.BACKEND_URL}/external/github/issue-templates`);
+  if (response.status === 401) {
+    unAuthorizedErr("Unauthorized: Can't access this resource");
+}
+  const template = await response.json();
+  const { templates } = template;
+
+  const data = await Promise.all(
+    templates.map(async (req: { name: string; download_url: string }) => {
+      const contentResponse = await fetch(req.download_url);
+      if (contentResponse.status === 401) {
+        unAuthorizedErr(`Unauthorized: Can't access ${req.download_url}`);
+    }
+      const content = await contentResponse.text();
+      let contentText;
+      let contentMetadata;
+      const findIndex = content.indexOf('<!-- Issue template by Collabo Community -->');
+      if (findIndex !== -1) {
+        contentMetadata = content.slice(0, findIndex).trim(); 
+        contentText = content.slice(findIndex + 46).trim();
+      }
+
+      const formatTitle =req.name.replace('.md', '').split('-').join(' ').replace(/^./, char => char.toUpperCase());
+      return { title: formatTitle, metadata:contentMetadata, content: contentText};
+    })
+  );
+
+  return data;
+};
