@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { success } from '@lib/helpers';
-import { createIssueService, getIssuesService, getPullRequestsService, getRepositoriesService,getIssueTemplatesService } from '@api-external/github.service';
+import { createIssueService, getIssuesService, getPullRequestsService, getRepositoriesService,getIssueTemplatesService, getIssueTemplatesContentService } from '@api-external/github.service';
 
 let response: { [key: string]: unknown } = {};
 const message = {
@@ -61,3 +61,13 @@ export const getIssueTemplatesController = async (req: Request, res: Response) =
     success(message.success.get);
     return res.status(200).json(response);
 }
+
+export const getIssueTemplatesContentController = async (req: Request, res: Response) => {
+    const docs = await getIssueTemplatesContentService();
+    const response = {
+      count: docs.length,
+      templates: docs,
+  };
+    success(message.success.get);
+    return res.status(200).json(response);
+};
