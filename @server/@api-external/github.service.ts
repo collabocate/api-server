@@ -105,7 +105,9 @@ export const getIssueTemplatesContentService = async () => {
         contentMetadata = content.slice(0, findIndex).trim(); 
         contentText = content.slice(findIndex + 46).trim();
       }
-      return { title: req.name.replace('.md', '').split('-').join(' ').replace(/^./, char => char.toUpperCase()), metadata:contentMetadata, content: contentText};
+
+      const formatTitle =req.name.replace('.md', '').split('-').join(' ').replace(/^./, char => char.toUpperCase());
+      return { title: formatTitle, metadata:contentMetadata, content: contentText};
     })
   );
 
