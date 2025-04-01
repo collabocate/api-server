@@ -18,7 +18,7 @@ export const getOneUserService = async (paramsId: string) => {
 export const deleteOneUserService = async (paramsId: string) => {
   const query = await User.deleteOne({ _id: paramsId, role:{$ne: UserRole.Admin} }).exec();
   if (query.deletedCount < 1){
-    notFoundErr('Delete Unsusseccful: Invalid ID or trying to delete the Admin User')
+    notFoundErr('Operation not allowed')
   }
   return query;
 }
@@ -31,7 +31,7 @@ export const updateOneUserPropertyValueService = async (paramsId: string, reques
 
   for (const ops of requestBody) {
     if (ops.propName === "role") {
-      badRequestErr('<role> property update not allowed')
+      badRequestErr('Operation not allowed')
     }
     if(!(ops.propName in query)){
       badRequestErr(`invalid property: ${ops.propName}`);
@@ -45,7 +45,7 @@ export const updateOneUserPropertyValueService = async (paramsId: string, reques
 
 export const updateUserPropertyValuesService = async (paramsId: string, requestBody: UserDocument) => {
   if (requestBody.role) {
-    badRequestErr('<role> property update not allowed')
+    badRequestErr('Operation not allowed')
   }
 
   const query = await User.findById(paramsId).exec();
