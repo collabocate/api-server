@@ -85,7 +85,7 @@ export const signupOrLoginWithGoogleController = (req: Request, res: Response, n
     // return res.status(201).json(response);
 
         const res_string = JSON.stringify(response);
-        res.redirect(`${process.env.CLIENT_APP_URL}/auth/callback?response=${res_string}`)
+        res.redirect(`${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/auth/callback?response=${res_string}`)
         
       } catch (err) {
         next(err)
