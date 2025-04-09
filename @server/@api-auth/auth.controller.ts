@@ -82,7 +82,6 @@ export const signupOrLoginWithGoogleController = (req: Request, res: Response, n
       message: `SUCCESS: User signup or login with Google was successfull`,
     };
     success(`SUCCESS: User signup or login with Google was successfull`);
-    // return res.status(201).json(response);
 
         const res_string = JSON.stringify(response);
         res.redirect(`${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/auth/callback?response=${res_string}`)
