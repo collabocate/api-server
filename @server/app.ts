@@ -25,7 +25,7 @@ app.use(express.urlencoded({
   extended: false
 }));
 app.use(express.json());
-app.use(cors({ origin: [`http://localhost:${process.env.CLIENT_APP_PORT}`, `${process.env.CLIENT_APP_URL}`] }));
+app.use(cors({ origin: [`http://localhost:${process.env.CLIENT_APP_PORT}`, `${process.env.CLIENT_APP_URL}`, `${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}] }));
 configurePassport(app);
 
 //====== Use Routers =======
