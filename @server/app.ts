@@ -25,26 +25,7 @@ app.use(express.urlencoded({
   extended: false
 }));
 app.use(express.json());
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        `http://localhost:${process.env.CLIENT_APP_PORT}`,
-        `${process.env.CLIENT_APP_URL}`,
-        `${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}`,
-      ];
-
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true, // Allow cookies & authentication
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+app.use(cors({ origin: [`http://localhost:${process.env.CLIENT_APP_PORT}`, `${process.env.CLIENT_APP_URL}`, `${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}`] }));
 configurePassport(app);
 
 //====== Use Routers =======
