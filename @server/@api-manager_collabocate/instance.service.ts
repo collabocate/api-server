@@ -15,17 +15,14 @@ export const createCollabocateInstanceService = async (user_id: string, requestB
     notFoundErr('No record found for provided ID');
   }
   
-  if (Object.keys(requestBody).includes("global") && requestBody.global === true) {
-    const query = await CollabocateInstance.findOne({global: true}).exec();
-    if(query){
-      badRequestErr('A global setting already exists, Only One Global Setting can exist');
+  const instances = await CollabocateInstance.find().exec(); 
+  if (instances.length === 0) { // if it is the first instance being created, the instance must be global
+    if (!Object.keys(requestBody).includes("global") || !requestBody.global === true || requestBody.instance_name) {
+      badRequestErr('First instance must have global: true and no <instance_name> property'); 
     }
-    if (requestBody.instance_name) {
-      badRequestErr('global setting does not require <instance_name> property');
-    }
-  } else {
-    if (!requestBody.instance_name) {
-      badRequestErr('<instance_name> property is required for non global settings');
+  } else { // if it is not the first instance being created, the instance must not be global
+    if (requestBody.global === true || !requestBody.instance_name) {
+      badRequestErr('A global instance already exists or no <instance_name> property for non global instance'); 
     }
   }
 
