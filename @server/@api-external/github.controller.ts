@@ -26,7 +26,10 @@ export const createIssueController =  async (req: Request, res: Response) => {
   const docs = await createIssueService(req);
   response = {
     message: message.success.issues.submitted,
-    issue: docs,
+    issue: {
+      url:docs.html_url,
+      number:docs.number
+    },
   }
   success(message.success.issues.submitted);
   return res.status(201).json(response);
