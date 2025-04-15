@@ -9,14 +9,16 @@ import {
 } from '@server/@api-user/user.controller';
 import { UserRole } from '@server/@api-user/user.model';
 import { authenticateUserWithJWT, authorizeByUserRoles } from '@server/@api-auth/middlewares/auth.middleware';
+import { validateDto } from '@validation/validate.dto.middleware';
+import { UpdateUserDto } from '@user/user-validation-dto/updateUser.dto';
 
 const router: IRouter = express.Router();
 
 router.get('/', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin]), getAllUsersController);
 router.get('/get-properties', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), getOneUserController);
 
-router.patch('/update-any-property', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), updateOneUserPropertyValueController);
-router.put('/update-properties', authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), updateUserPropertyValuesController);
+router.patch('/update-any-property', validateDto(UpdateUserDto), authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), updateOneUserPropertyValueController);
+router.put('/update-properties', validateDto(UpdateUserDto), authenticateUserWithJWT, authorizeByUserRoles([UserRole.Admin, UserRole.User]), updateUserPropertyValuesController);
 
 router.delete('/delete', authenticateUserWithJWT, authorizeByUserRoles([UserRole.User]), deleteOneUserController);
 
