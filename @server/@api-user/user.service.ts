@@ -23,22 +23,17 @@ export const deleteOneUserService = async (paramsId: string) => {
   return query;
 }
 
-export const updateOneUserPropertyValueService = async (paramsId: string, requestBody: { propName: string, value: string }[]) => {
+export const updateOneUserPropertyValueService = async (paramsId: string, requestBody: UserDocument) => {
+  if (requestBody.role) {
+    badRequestErr('Operation not allowed')
+  }
+
   const query = await User.findById(paramsId).exec();
   if(!query){
     notFoundErr('No record found for provided ID');
   }
 
-  for (const ops of requestBody) {
-    if (ops.propName === "role") {
-      badRequestErr('Operation not allowed')
-    }
-    if(!(ops.propName in query)){
-      badRequestErr(`invalid property: ${ops.propName}`);
-    }
-    query[ops.propName as keyof UserDocument] = ops.value as never;
-  }
-
+  query.set({ ...query, ...requestBody });
   const updatedQuery = await query.save();
   return updatedQuery;
 };
