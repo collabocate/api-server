@@ -27,8 +27,8 @@ export const createIssueController =  async (req: Request, res: Response) => {
   response = {
     message: message.success.issues.submitted,
     issue: {
-      url:docs.html_url,
-      number:docs.number,
+      url: docs.html_url,
+      number: docs.number,
     },
   }
   success(message.success.issues.submitted);
