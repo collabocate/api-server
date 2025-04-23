@@ -15,7 +15,7 @@ export const createCollabocateInstanceService = async (user_id: string, requestB
     notFoundErr('No record found for provided ID');
   }
   
-  const instances = await CollabocateInstance.find().exec(); 
+  const instances = await CollabocateInstance.find({ user: user }).exec(); 
   if (instances.length === 0) { // if it is the first instance being created, the instance must be global
     if (!Object.keys(requestBody).includes("global") || !requestBody.global === true || requestBody.instance_name) {
       badRequestErr('First instance must have global: true and no <instance_name> property'); 
