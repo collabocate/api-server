@@ -72,6 +72,8 @@ export const createAdminUserService = async () => {
 
 //--------------------------------------------------------------------------------------------------//
 export const deleteAllUserService = async () => {
+  const adminUser = await User.findOne({ role: UserRole.Admin }).exec();
+  await CollabocateInstance.deleteMany({ user: {$ne: adminUser} }).exec();
   const query = await User.deleteMany({role:{$ne: UserRole.Admin}}).exec();
   return query;
 }
