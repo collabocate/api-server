@@ -1,5 +1,6 @@
 import { badRequestErr, notFoundErr } from '@lib/errors/Errors';
 import { UserDocument, UserModel as User, UserRole } from '@server/@api-user/user.model';
+import { CollabocateInstanceModel as CollabocateInstance } from '@collabocate/instance.model';
 
 
 export const getAllUsersService = async () => {
@@ -16,10 +17,12 @@ export const getOneUserService = async (paramsId: string) => {
 };
 
 export const deleteOneUserService = async (paramsId: string) => {
-  const query = await User.deleteOne({ _id: paramsId, role:{$ne: UserRole.Admin} }).exec();
-  if (query.deletedCount < 1){
-    notFoundErr('Operation not allowed')
+  const user = await User.findOne({ _id: paramsId, role:{$ne: UserRole.Admin} }).exec();
+  if(!user){
+    notFoundErr('Operation not allowed');
   }
+  await CollabocateInstance.deleteMany({ user: user }).exec();
+  const query = await User.deleteOne({ _id: paramsId }).exec();
   return query;
 }
 
