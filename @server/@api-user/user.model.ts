@@ -10,6 +10,7 @@ export enum UserRole {
 export interface UserDocument extends mongoose.Document {
   _id?: string;
   email: string;
+  username: string;
   email_verified: boolean;
   password: string;
   role: UserRole;
@@ -27,6 +28,7 @@ const UserSchema = new mongoose.Schema({
       "please provide valid email",
     ]
   },
+  username: { type: String, required: true, unique: true },
   email_verified: { type: Boolean, required:true, default: false},
   password: { type: String, required: true },
   role: { type: String, required: true, default: UserRole.User },

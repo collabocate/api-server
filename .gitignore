@@ -6,6 +6,9 @@ config.generated.json
 #.env file
 .env
 
+#.lock file
+package-lock.json
+
 # dependencies
 /node_modules
 

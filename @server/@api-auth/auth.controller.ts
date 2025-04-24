@@ -138,7 +138,7 @@ export const loginWithLocalController = async (req: Request, res: Response, next
       }
 
       const token = jwt.sign(
-        {_id: user._id, email: user.email, role: user.role},
+        {_id: user._id, email: user.email, username:user.username, role: user.role},
         process.env.JWT_SECRET,
         {expiresIn: process.env.JWT_LIFETIME}
       );

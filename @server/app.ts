@@ -14,19 +14,46 @@ import { router as userRouter } from '@server/@api-user/user.route';
 import { router as collabocateInstanceRouter } from '@collabocate/instance.route';
 import { router as trashRouter } from '@server/@api-trash/trash.route';
 import { configurePassport } from '@server/@api-auth/passport/passport.auth.config';
+import { Server, ServerOptions } from 'socket.io';
+import { setupSocketHandlers } from './@api-chat/socket.handlers';
+import http from 'http';
 
 const dotEnv = dotenv.config();
 dotenvExpand.expand(dotEnv);
 
 const app: Express = express();
+const server = http.createServer(app);
 
 app.use(morgan('dev'));
 app.use(express.urlencoded({
   extended: false
 }));
 app.use(express.json());
-app.use(cors({ origin: [`http://localhost:${process.env.CLIENT_APP_PORT}`, `${process.env.CLIENT_APP_URL}`] }));
+app.use(cors({
+  origin: [`http://localhost:${process.env.CLIENT_APP_PORT}`, `${process.env.CLIENT_APP_URL}`],
+  credentials: true
+}));
 configurePassport(app);
+
+const socketOptions = {
+  cors: {
+    origin: [`http://localhost:${process.env.CLIENT_APP_PORT}`, `${process.env.CLIENT_APP_URL}`],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["*"],
+    credentials: true
+  }
+};
+
+const io = new Server(server, socketOptions as unknown as ServerOptions);
+
+setupSocketHandlers(io);
+
+app.options('*', cors({ credentials: true }));
+
+// Add this before your routes
+app.get('/test-cors', (req, res) => {
+  res.json({ message: 'CORS is working!' });
+});
 
 //====== Use Routers =======
 app.use('/', appRouter);
