@@ -31,7 +31,8 @@ app.use(express.urlencoded({
 app.use(express.json());
 app.use(cors({
   origin: [`http://localhost:${process.env.CLIENT_APP_PORT}`, `${process.env.CLIENT_APP_URL}`],
-  credentials: true
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 configurePassport(app);
 
@@ -47,8 +48,6 @@ const socketOptions = {
 const io = new Server(server, socketOptions as unknown as ServerOptions);
 
 setupSocketHandlers(io);
-
-app.options('*', cors({ credentials: true }));
 
 // Add this before your routes
 app.get('/test-cors', (req, res) => {
@@ -79,4 +78,4 @@ app.use((err: CustomErrorInterface, req: Request, res: Response, next: NextFunct
 });
 //==========================================
 
-export { app };
+export { server };

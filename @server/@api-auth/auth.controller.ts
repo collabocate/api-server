@@ -2,8 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { success } from '@lib/helpers';
 import passport from 'passport';
 import { UserDocument } from '@server/@api-user/user.model';
-import jwt from 'jsonwebtoken'; 
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { userInfo } from 'os';
 dotenv.config();
 
 // const routeName = 'user';
@@ -13,7 +14,7 @@ let response: { [key: string]: unknown } = {};
 
 //---------------------- AUTHENTICATION (SIGNUP AND LOGIN) -------------------------------//
 export const signupOrLoginWithGithubController = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate("github", {session: false},
+  passport.authenticate("github", { session: false },
     (err: Error, user: UserDocument) => {
       try {
         if (err) {
@@ -22,9 +23,9 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
         }
 
         const token = jwt.sign(
-          {_id: user._id, email: user.email, role: user.role},
+          { _id: user._id, email: user.email, role: user.role },
           process.env.JWT_SECRET,
-          {expiresIn: process.env.JWT_LIFETIME}
+          { expiresIn: process.env.JWT_LIFETIME }
         );
 
         response = {
@@ -44,116 +45,123 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
         };
         success(`SUCCESS: User signup or login with Github was successfull`);
         return res.status(201).json(response);
-        
+
       } catch (err) {
         next(err)
       }
-  }) (req, res, next)
+    })(req, res, next)
 }
 
 export const signupOrLoginWithGoogleController = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate("google", {session: false},
+  passport.authenticate("google", { session: false },
     (err: Error, user: UserDocument) => {
       try {
         if (err) {
-        // const myErr = new Error("[UNAUTHORIZED] Invalid google user");
+          // const myErr = new Error("[UNAUTHORIZED] Invalid google user");
           throw err;
-      }
+        }
 
-      const token = jwt.sign(
-        {_id: user._id, email: user.email, role: user.role},
-        process.env.JWT_SECRET,
-        {expiresIn: process.env.JWT_LIFETIME}
-      );
+        const token = jwt.sign(
+          { _id: user._id, email: user.email, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: process.env.JWT_LIFETIME }
+        );
 
-      response = {
-      success: true,
-      data: {
-        user: {
-          _id: user._id,
-          email: user.email,
-          email_verified: user.email_verified,
-          role: user.role,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-        },
-        token: token
-      },
-      message: `SUCCESS: User signup or login with Google was successfull`,
-    };
-    success(`SUCCESS: User signup or login with Google was successfull`);
-    return res.status(201).json(response);
-        
+        response = {
+          success: true,
+          data: {
+            user: {
+              _id: user._id,
+              email: user.email,
+              email_verified: user.email_verified,
+              role: user.role,
+              createdAt: user.createdAt,
+              updatedAt: user.updatedAt,
+            },
+            token: token
+          },
+          message: `SUCCESS: User signup or login with Google was successfull`,
+        };
+        success(`SUCCESS: User signup or login with Google was successfull`);
+        return res.status(201).json(response);
+
       } catch (err) {
         next(err)
       }
-  }) (req, res, next)
+    })(req, res, next)
 }
 
 export const signupWithLocalController = async (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate('local-signup', {session: false}, 
+  passport.authenticate('local-signup', { session: false },
     (err: Error, user: UserDocument) => {
-    try {
-      if (err) {
-        throw err;
+      try {
+        if (err) {
+          throw err;
+        }
+
+        const token = jwt.sign(
+          { _id: user._id, email: user.email, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: process.env.JWT_LIFETIME }
+        );
+
+        response = {
+          success: true,
+          data: {
+            user: {
+              _id: user._id,
+              email: user.email,
+              email_verified: user.email_verified,
+              role: user.role,
+              createdAt: user.createdAt,
+              updatedAt: user.updatedAt,
+            },
+            token: token
+          },
+          message: `SUCCESS: User local-signup was successfull`,
+        };
+        success(`SUCCESS: User local-signup was successfull`);
+        return res.status(201).json(response);
+
+      } catch (err) {
+        next(err);
       }
-
-      const token = jwt.sign(
-        {_id: user._id, email: user.email, role: user.role},
-        process.env.JWT_SECRET,
-        {expiresIn: process.env.JWT_LIFETIME}
-      );
-
-      response = {
-      success: true,
-      data: {
-        user: {
-          _id: user._id,
-          email: user.email,
-          email_verified: user.email_verified,
-          role: user.role,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt,
-        },
-        token: token
-      },
-      message: `SUCCESS: User local-signup was successfull`,
-    };
-    success(`SUCCESS: User local-signup was successfull`);
-    return res.status(201).json(response);
-
-    } catch (err) {
-      next(err);
-    }
-  }) (req, res, next);
+    })(req, res, next);
 }
 
 
 export const loginWithLocalController = async (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate('local-login', {session: false}, 
+  passport.authenticate('local-login', { session: false },
     (err: Error, user: UserDocument) => {
-    try {
-      if (err) {
-        throw err;
+      try {
+        if (err) {
+          throw err;
+        }
+
+        const token = jwt.sign(
+          { _id: user._id, email: user.email, username: user.username, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: process.env.JWT_LIFETIME }
+        );
+
+        response = {
+          success: true,
+          data: {
+            token: token, user: {
+              _id: user._id,
+              email: user.email,
+              username: user.username,
+              role: user.role
+            }
+          },
+          message: `SUCCESS: User local-login was successfull`,
+        };
+        success(`SUCCESS: User local-login was successfull`);
+        return res.status(201).json(response);
+
+      } catch (err) {
+        next(err);
       }
-
-      const token = jwt.sign(
-        {_id: user._id, email: user.email, username:user.username, role: user.role},
-        process.env.JWT_SECRET,
-        {expiresIn: process.env.JWT_LIFETIME}
-      );
-
-      response = {
-        success: true,
-        data: { token: token },
-        message: `SUCCESS: User local-login was successfull`,
-      };
-      success(`SUCCESS: User local-login was successfull`);
-      return res.status(201).json(response);
-
-    } catch (err) {
-      next(err);
-    }
-  }) (req, res, next);
+    })(req, res, next);
 }
 //------------------------------------------------------------------------------------------//

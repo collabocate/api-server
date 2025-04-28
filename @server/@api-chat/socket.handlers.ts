@@ -1,79 +1,53 @@
 import jwt from 'jsonwebtoken';
-import { Server, Socket } from 'socket.io';
-import { UserStore } from '../@api-chat/user.store';
-import Message from '../@api-chat/message.model';
+import { DirectMessageData, MessageResponse } from './interfaces';
+import { UserStore } from './user.store';
+import { success, error, warning } from '@lib/helpers';
+import Message from './message.model';
 import dotenv from 'dotenv';
-
-export interface DirectMessageData {
-  recipient: string;
-  recipientId?: string;
-  content: string;
-}
-
-export interface MessageResponse {
-  messageId: string;
-  sender?: string;
-  senderId?: string;
-  recipientId?: string;
-  content: string;
-  timestamp: string;
-  read: boolean;
-}
-
-interface JwtPayload {
-  _id: string;
-  username: string;
-  [key: string]: unknown;
-}
-
-interface SocketWithUser extends Socket {
-  user: {
-    userId: string;
-    username: string;
-  };
-}
 
 dotenv.config();
 const SECRET_KEY = process.env.JWT_SECRET || "Chat-app";
 
-export function setupSocketHandlers(io: Server): void {
+export function setupSocketHandlers(io: any): void {
   // Authentication middleware
-  io.use((socket: Socket, next: (err?: Error) => void) => {
+  io.use((socket: any, next: Function) => {
     const token = socket.handshake.auth.token;
     if (!token) {
+      error('Authentication error: Token required');
       return next(new Error('Authentication error: Token required'));
     }
 
-    try {
-      const decoded = jwt.verify(token, SECRET_KEY) as JwtPayload;
-      
-      (socket as SocketWithUser).user = {
+    jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
+      if (err) {
+        error('Authentication error: Invalid token');
+        return next(new Error('Authentication error: Invalid token'));
+      }
+
+      socket.user = {
         userId: decoded._id,
         username: decoded.username
       };
 
       next();
-    } catch (err) {
-      return next(new Error('Authentication error: Invalid token'));
-    }
+    });
   });
 
   // Connection event handler
-  io.on('connection', (socket: Socket) => {
-    const typedSocket = socket as SocketWithUser;
+  io.on('connection', (socket: any) => {
 
-    if (!typedSocket.user || !typedSocket.user.userId) {
+    if (!socket.user || !socket.user.userId) {
       socket.disconnect();
       return;
     }
 
-    const { userId } = typedSocket.user;
-    let username = typedSocket.user.username;
+    const { userId, username } = socket.user;
 
     if (!username) {
-      username = `User-${userId.substring(0, 6)}`;
-      typedSocket.user.username = username;
+      warning('User connected without username');
+      // You might want to set a default username or disconnect the socket
     }
+
+    success(`SOCKET, User connected, { ${userId}, ${username}, socketId: ${socket.id} }`);
 
     // Register authenticated user
     UserStore.addUser(userId, socket.id, username);
@@ -87,13 +61,17 @@ export function setupSocketHandlers(io: Server): void {
 
     // Handle request for online users
     socket.on('get_online_users', () => {
+      success(`SOCKET, Client requested online users list, { ${userId}, socketId: ${socket.id} }`);
+      success(`Sending online users:, ${UserStore.getAllUsers()}`);
       socket.emit('online_users', UserStore.getAllUsers());
     });
 
     // Get unread messages for the user
-    socket.on('get_message_history', async (data: { userId: string } | string) => {
+    socket.on('get_message_history', async (data: { userId: any; }) => {
       try {
-        const otherUserId = typeof data === 'object' ? data.userId : data; // Handle both object and string format
+        const otherUserId = data.userId || data; // Handle both object and string format
+
+        success(`SOCKET, Getting message history, { ${userId}, ${otherUserId} }`);
 
         const messages = await Message.find({
           $or: [
@@ -124,21 +102,24 @@ export function setupSocketHandlers(io: Server): void {
           { $set: { read: true } }
         );
       } catch (error) {
+        error('Failed to retrieve message history');
         socket.emit('error', 'Failed to retrieve message history');
       }
     });
 
     // Mark entire conversation as read
-    socket.on('mark_conversation_read', async (data: { userId: string } | string) => {
+    socket.on('mark_conversation_read', async (data: { userId: any; }) => {
       try {
-        const otherUserId = typeof data === 'object' ? data.userId : data;
+        const otherUserId = data.userId || data;
 
         await Message.updateMany(
           { sender: otherUserId, recipient: userId, read: false },
           { $set: { read: true } }
         );
 
+        error('Marked conversation as read');
       } catch (error) {
+        error('Failed to mark conversation as read');
         socket.emit('error', 'Failed to mark conversation as read');
       }
     });
@@ -148,6 +129,12 @@ export function setupSocketHandlers(io: Server): void {
       try {
         const recipientId = data.recipientId || data.recipient;
         const recipientSocketId = UserStore.getSocketId(recipientId);
+
+        success(`SOCKET, Direct message, {
+          from: ${userId},
+          to: ${recipientId},
+          hasRecipientSocket: ${!!recipientSocketId}
+        }`);
 
         // Create and save message to database
         const newMessage = new Message({
@@ -178,19 +165,20 @@ export function setupSocketHandlers(io: Server): void {
         // Confirm to sender
         socket.emit('message_sent', messageResponse);
       } catch (error) {
+        error('Failed to send message');
         socket.emit('message_error', 'Failed to send message');
       }
     });
 
-    socket.on('test_event', () => {
-      // Removed console.log - replace with proper logging if needed
+    socket.on('test_event', (data: any) => {
+      success(`Received test event: ${data}`);
       socket.emit('test_response', { received: true });
     });
 
     // Mark messages as read
-    socket.on('mark_as_read', async (data: { messageId: string } | string) => {
+    socket.on('mark_as_read', async (data: { messageId: any; }) => {
       try {
-        const messageId = typeof data === 'object' ? data.messageId : data;
+        const messageId = data.messageId || data;
 
         await Message.findByIdAndUpdate(messageId, { read: true });
         const message = await Message.findById(messageId);
@@ -202,13 +190,14 @@ export function setupSocketHandlers(io: Server): void {
           }
         }
       } catch (error) {
+        error('Failed to mark message as read');
         socket.emit('error', 'Failed to mark message as read');
       }
     });
 
     // User is typing event
-    socket.on('typing', (data: { recipientId: string } | string) => {
-      const recipientId = typeof data === 'object' ? data.recipientId : data;
+    socket.on('typing', (data: { recipientId: any; }) => {
+      const recipientId = data.recipientId || data;
       const recipientSocketId = UserStore.getSocketId(recipientId);
 
       if (recipientSocketId) {
@@ -217,8 +206,8 @@ export function setupSocketHandlers(io: Server): void {
     });
 
     // User stopped typing event
-    socket.on('stopped_typing', (data: { recipientId: string } | string) => {
-      const recipientId = typeof data === 'object' ? data.recipientId : data;
+    socket.on('stopped_typing', (data: { recipientId: any; }) => {
+      const recipientId = data.recipientId || data;
       const recipientSocketId = UserStore.getSocketId(recipientId);
 
       if (recipientSocketId) {
@@ -233,6 +222,7 @@ export function setupSocketHandlers(io: Server): void {
       io.emit('online_users', UserStore.getAllUsers());
       io.emit('user_status', { userId, username, status: 'offline' });
       io.emit('user_disconnected', userId);
+      warning('Client disconnected');
     });
   });
 }
