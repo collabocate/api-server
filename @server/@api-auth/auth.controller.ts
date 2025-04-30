@@ -45,11 +45,11 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
         };
         success(`SUCCESS: User signup or login with Github was successfull`);
         return res.status(201).json(response);
-
+   
       } catch (err) {
         next(err)
       }
-    }) (req, res, next)
+  }) (req, res, next)
 }
 
 export const signupOrLoginWithGoogleController = (req: Request, res: Response, next: NextFunction) => {
@@ -59,7 +59,7 @@ export const signupOrLoginWithGoogleController = (req: Request, res: Response, n
         if (err) {
         // const myErr = new Error("[UNAUTHORIZED] Invalid google user");
           throw err;
-        }
+      }
 
         const token = jwt.sign(
           {_id: user._id, email: user.email, role: user.role},
@@ -88,7 +88,7 @@ export const signupOrLoginWithGoogleController = (req: Request, res: Response, n
       } catch (err) {
         next(err)
       }
-    }) (req, res, next)
+  }) (req, res, next)
 }
 
 export const signupWithLocalController = async (req: Request, res: Response, next: NextFunction) => {
@@ -126,7 +126,7 @@ export const signupWithLocalController = async (req: Request, res: Response, nex
     } catch (err) {
       next(err);
     }
-  })(req, res, next);
+  }) (req, res, next);
 }
 
 
@@ -138,11 +138,11 @@ export const loginWithLocalController = async (req: Request, res: Response, next
         throw err;
       }
 
-        const token = jwt.sign(
-          { _id: user._id, email: user.email, username: user.username, role: user.role },
-          process.env.JWT_SECRET,
-          { expiresIn: process.env.JWT_LIFETIME }
-        );
+      const token = jwt.sign(
+        {_id: user._id, email: user.email, username: user.username, role: user.role},
+        process.env.JWT_SECRET,
+        {expiresIn: process.env.JWT_LIFETIME}
+      );
 
         response = {
           success: true,
@@ -159,9 +159,9 @@ export const loginWithLocalController = async (req: Request, res: Response, next
         success(`SUCCESS: User local-login was successfull`);
         return res.status(201).json(response);
 
-      } catch (err) {
-        next(err);
-      }
-    })(req, res, next);
+    } catch (err) {
+      next(err);
+    }
+  }) (req, res, next);
 }
 //------------------------------------------------------------------------------------------//
