@@ -22,9 +22,26 @@ export function validateDto(DtoClass: any) {
         badRequestErr(`Validation Failed: request body contains unallowed properties - ${extraKeys.join(', ')}`);
       }
 
-      const errors = await validate(dtoInstance);
-      if (errors.length > 0) {
-        badRequestErr(`Validation Failed: ${errors}`);
+      const validation_errors = await validate(dtoInstance);
+
+      let validation_error_conditions: string[] = [""];
+      if (validation_errors.length > 0) {
+        validation_errors.forEach((validation_error)=>{
+          const property_check = validation_error.value;
+          if(property_check === undefined) {
+            const error_msg = `must have ${validation_error.property} property`;
+            validation_error_conditions = [...validation_error_conditions, error_msg];
+          }
+          else{
+            const constraints = validation_error.constraints;
+            const constraint_msgs = Object.values(constraints);
+            constraint_msgs.forEach((constrain_msg)=>{
+              validation_error_conditions = [...validation_error_conditions, constrain_msg];
+            })
+          }
+        });
+        validation_error_conditions.shift();
+        badRequestErr(`Validation Failed: request body must meet the following conditions - ${validation_error_conditions.join(', ')}`);
       }
       next(); 
     }
