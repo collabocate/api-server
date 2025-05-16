@@ -62,7 +62,7 @@ export const createAdminUserService = async () => {
   if (!adminUser) {
     const createAdminUser = new User({
       email: "admin@admin.com",
-      password: "admin",
+      password: "Admin-123456",
       role: UserRole.Admin,
     }); 
     adminUser = await createAdminUser.save();
