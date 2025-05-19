@@ -4,6 +4,10 @@ import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { Response, NextFunction } from 'express';
 
+export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$/;
+export const passwordValidationMessage = 'password must be a mix of lowercase letter(s), uppercase letter(s), number(s) and symbol(s)';
+export const passwordMinLength = 12;
+
 export function validateDto(DtoClass: any) {
   return async (req: ReqUser, res: Response, next: NextFunction) => {
     try {

@@ -1,3 +1,4 @@
+import { passwordMinLength, passwordRegex, passwordValidationMessage } from '@validation/validate.dto.middleware';
 import { Expose } from 'class-transformer';
 import { IsString, IsNotEmpty, IsEmail, MinLength, Matches} from 'class-validator';
 
@@ -8,8 +9,8 @@ export class AuthDto {
   email: string;
 
   @Expose()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$/, {message: 'password must be a mix of lowercase letter(s), uppercase letter(s), number(s) and symbol(s)'})
-  @MinLength(8)
+  @Matches(passwordRegex, {message: passwordValidationMessage})
+  @MinLength(passwordMinLength)
   @IsString()
   @IsNotEmpty()
   password: string;
