@@ -52,7 +52,7 @@ export const connectionType = () => {
 // DB connect
 export const npmRunPackageJsonScript = ({ script, currentWorkingDir } : { script: string, currentWorkingDir: string }): void => {
   const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  spawn(npm, ['run', script], { cwd: currentWorkingDir, stdio: 'inherit' });
+  spawn(npm, ['run', script], { cwd: currentWorkingDir, stdio: 'inherit', shell: true });
 }
 
 export const server = (serverPort: number | string): void => {
