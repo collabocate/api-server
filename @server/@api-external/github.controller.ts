@@ -15,8 +15,10 @@ const message = {
 export const getIssuesController =  async (req: Request, res: Response) => {
   const docs = await getIssuesService();
   response = {
+    success: true,
+    message: message.success.get,
     count: docs.length,
-    issues: docs,
+    data: docs,
   }
   success(message.success.get);
   return res.status(200).json(response);
@@ -25,8 +27,9 @@ export const getIssuesController =  async (req: Request, res: Response) => {
 export const createIssueController =  async (req: Request, res: Response) => {
   const docs = await createIssueService(req);
   response = {
+    success: true,
     message: message.success.issues.submitted,
-    issue: {
+    data: {
       url: docs.html_url,
       number: docs.number,
     },
@@ -38,8 +41,10 @@ export const createIssueController =  async (req: Request, res: Response) => {
 export const getPullRequestsController =  async (req: Request, res: Response) => {
   const docs = await getPullRequestsService();
   response = {
+    success: true,
+    message: message.success.get,
     count: docs.length,
-    pull_requests: docs,
+    data: docs,
   }
   success(message.success.get);
   return res.status(200).json(response);
@@ -48,8 +53,10 @@ export const getPullRequestsController =  async (req: Request, res: Response) =>
 export const getRepositoriesController =  async (req: Request, res: Response) => {
   const docs = await getRepositoriesService();
   response = {
+    success: true,
+    message: message.success.get,
     count: docs.length,
-    repositories: docs,
+    data: docs,
   }
   success(message.success.get);
   return res.status(200).json(response);
@@ -58,8 +65,10 @@ export const getRepositoriesController =  async (req: Request, res: Response) =>
 export const getIssueTemplatesController = async (req: Request, res: Response) => {
     const docs = await getIssueTemplatesService();
     const response = {
+      success: true,
+      message: message.success.get,
       count: docs.length,
-      templates: docs,
+      data: docs,
     };
     success(message.success.get);
     return res.status(200).json(response);
@@ -68,9 +77,11 @@ export const getIssueTemplatesController = async (req: Request, res: Response) =
 export const getIssueTemplatesContentController = async (req: Request, res: Response) => {
   const docs = await getIssueTemplatesContentService();
   const response = {
+    success: true,
+    message: message.success.get,
     count: docs.length,
-    templates: docs,
-};
+    data: docs,
+  };
   success(message.success.get);
   return res.status(200).json(response);
 };
