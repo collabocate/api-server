@@ -29,6 +29,7 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
 
         response = {
           success: true,
+          message: `SUCCESS: User signup or login with Github was successfull`,
           data: {
             user: {
               _id: user._id,
@@ -40,7 +41,6 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
             },
             token: token
           },
-          message: `SUCCESS: User signup or login with Github was successfull`,
         };
         success(`SUCCESS: User signup or login with Github was successfull`);
         return res.status(201).json(response);
@@ -68,6 +68,7 @@ export const signupOrLoginWithGoogleController = (req: Request, res: Response, n
 
       response = {
       success: true,
+      message: `SUCCESS: User signup or login with Google was successfull`,
       data: {
         user: {
           _id: user._id,
@@ -79,7 +80,6 @@ export const signupOrLoginWithGoogleController = (req: Request, res: Response, n
         },
         token: token
       },
-      message: `SUCCESS: User signup or login with Google was successfull`,
     };
     success(`SUCCESS: User signup or login with Google was successfull`);
 
@@ -108,6 +108,7 @@ export const signupWithLocalController = async (req: Request, res: Response, nex
 
       response = {
       success: true,
+      message: `SUCCESS: User local-signup was successfull`,
       data: {
         user: {
           _id: user._id,
@@ -119,7 +120,6 @@ export const signupWithLocalController = async (req: Request, res: Response, nex
         },
         token: token
       },
-      message: `SUCCESS: User local-signup was successfull`,
     };
     success(`SUCCESS: User local-signup was successfull`);
     return res.status(201).json(response);
@@ -147,8 +147,8 @@ export const loginWithLocalController = async (req: Request, res: Response, next
 
       response = {
         success: true,
-        data: { token: token },
         message: `SUCCESS: User local-login was successfull`,
+        data: { token: token },
       };
       success(`SUCCESS: User local-login was successfull`);
       return res.status(201).json(response);

@@ -26,5 +26,12 @@ export const getAppController =  async (req: Request, res: Response) => {
         list: ['Find list of contributors in project README: https://github.com/collabo-community/api-server?tab=readme-ov-file#contributors'],
       },
     };
-    res.status(200).json(apiInfo);
+
+    const response = {
+      success: true,
+      message: 'GET request successful',
+      data: apiInfo,
+    }
+
+    res.status(200).json(response);
 }

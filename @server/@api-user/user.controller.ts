@@ -22,9 +22,9 @@ export const getAllUsersController = async (req: Request, res: Response, next: N
     const users = await getAllUsersService();
     response = {
       success: true,
-      data: {
-        count: users.length,
-        users: users.map(user => {
+      message: `SUCCESS: All users succesfully retrieved`,
+      count: users.length,
+      data: users.map(user => {
           return {
             _id: user._id,
             email: user.email,
@@ -46,9 +46,7 @@ export const getAllUsersController = async (req: Request, res: Response, next: N
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
           }
-        })
-      },
-      message: `SUCCESS: All users succesfully retrieved`,
+      }),
     };
     success(`SUCCESS: All users succesfully retrieved`);
     return res.status(200).json(response);
@@ -63,6 +61,7 @@ export const getOneUserController = async (req: ReqUser, res: Response, next: Ne
     const user = await getOneUserService(req.user._id);
     const response = {
       success: true,
+      message: `SUCCESS: User succesfully retrieved`,
       data: {
         _id: user._id,
         email: user.email,
@@ -84,7 +83,6 @@ export const getOneUserController = async (req: ReqUser, res: Response, next: Ne
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },
-      message: `SUCCESS: User succesfully retrieved`,
     };
     success(`SUCCESS: User succesfully retrieved`);
     return res.status(200).json(response);
@@ -99,8 +97,8 @@ export const deleteOneUserController = async (req: ReqUser, res: Response, next:
     await deleteOneUserService(req.user._id);
     response = {
       success: true,
-      data: {},
       message: `SUCCESS: User successfully deleted`,
+      data: {},
     };
     success(`SUCCESS: User successfully deleted`);
     return res.status(201).json(response);
@@ -116,8 +114,8 @@ export const updateOneUserPropertyValueController = async (req: ReqUser, res: Re
     await updateOneUserPropertyValueService(req.user._id, req.body);
     response = {
       success: true,
-      data: {},
       message: `PATCH update request for ID ${id} successful!`,
+      data: {},
     };
     success(`PATCH update request for ID ${id} successful!`);
     return res.status(200).json(response);
@@ -133,8 +131,8 @@ export const updateUserPropertyValuesController = async (req: ReqUser, res: Resp
     await updateUserPropertyValuesService(req.user._id, req.body);
     response = {
       success: true,
-      data: {},
       message: `PUT update request for ID ${id} successful!`,
+      data: {},
     };
     success(`PUT update request for ID ${id} successful!`);
     return res.status(200).json(response);
@@ -158,8 +156,8 @@ export const deleteAllUserController = async (req: Request, res: Response, next:
     const user = await deleteAllUserService();
     const response = {
       success: true,
-      data: {},
       message: `${user.deletedCount} user(s) deleted successfully!`,
+      data: {},
     };
     success(response.message);
     return res.status(201).json(response);

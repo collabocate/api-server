@@ -23,7 +23,9 @@ export const restoreOneTrashController = async (req: ReqUser, res: Response, nex
     await restoreOneTrashService(user_id, param_id);
 
     response = {
+      success: true,
       message: `${item} with id:${param_id} restored successfully and deleted from trash!`,
+      data: {}
     }
     success(`${item} with id:${param_id} restored successfully and deleted from trash!`);
     return res.status(200).json(response); 
@@ -37,6 +39,7 @@ export const getTrashController = async (req: ReqUser, res: Response, next: Next
     const user_id = req.user._id
     const docs = await getTrashService(user_id);
     response = {
+      success:true,
       message: `all ${item}s for ${user_id} gotten successfully!`,
       count: docs.length,
       data: docs.map(doc => {
@@ -64,6 +67,7 @@ export const getOneTrashController = async (req: ReqUser, res: Response, next: N
     const user_id: string = req.user._id;
     const doc = await getOneTrashService(user_id, param_id);
     response = {
+      success: true,
       message: `${item} with id:${param_id} gotten successfully!`,
       data: {
         _id: doc._id,
@@ -89,6 +93,7 @@ export const getOneSpecificTrashController = async (req: ReqUser, res: Response,
     const collection_name: string = req.params.collection_name;
     const doc = await getOneSpecificTrashService(user_id, param_id, collection_name);
     response = {
+      success: true,
       message: `${item} with id:${param_id} gotten successfully!`,
       data: {
         _id: doc._id,

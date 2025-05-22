@@ -20,6 +20,7 @@ export const createCollabocateInstanceController = async (req: ReqUser, res: Res
   try {
     const doc = await createCollabocateInstanceService(req.user._id, req.body);
     response = {
+      success: true,
       message: `${item} created successfully!`,
       data: {
         _id: doc._id,
@@ -45,6 +46,7 @@ export const getAllCollabocateInstanceController = async (req: Request, res: Res
   try {
     const docs = await getAllCollabocateInstanceService();
     response = {
+      success: true,
       message: `all ${item}s gotten successfully!`,
       count: docs.length,
       data: docs.map(doc => {
@@ -74,6 +76,7 @@ export const getCollabocateInstanceController = async (req: ReqUser, res: Respon
     const user_id = req.user._id
     const docs = await getCollabocateInstanceService(user_id);
     response = {
+      success: true,
       message: `all ${item}s for ${user_id} gotten successfully!`,
       count: docs.length,
       data: docs.map(doc => {
@@ -104,6 +107,7 @@ export const getOneCollabocateInstanceController = async (req: ReqUser, res: Res
     const id = req.params.settingID;
     const doc = await getOneCollabocateInstanceService(user_id, id);
     response = {
+      success: true,
       message: `${item} with id:${id} gotten successfully!`,
       data: {
         _id: doc._id,
@@ -133,10 +137,13 @@ export const deleteOneCollabocateInstanceController = async (req: ReqUser, res: 
     const doc = await deleteOneCollabocateInstanceService(user_id, param_id);
 
     response = {
+      success: true,
       message: `${item} with id:${param_id} trashed successfully!`,
-      trashId: doc._id,
-      trashCollectionName: doc.collectionName,
-      userId: doc.user._id
+      data: {
+        trashId: doc._id,
+        trashCollectionName: doc.collectionName,
+        userId: doc.user._id
+      }
     }
     
     success(`${item} with id:${param_id} trashed successfully!`);
@@ -151,6 +158,7 @@ export const updateOneCollabocateInstanceController = async (req: Request, res: 
     const id = req.params.settingID;
     const doc = await updateOneCollabocateInstanceService(id, req.body);
     response = {
+      success: true,
       message: `Update request for ID ${id} successful!`,
       data: {
         _id: doc._id,
