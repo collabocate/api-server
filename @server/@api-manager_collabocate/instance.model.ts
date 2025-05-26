@@ -18,17 +18,18 @@ export const collectionName = 'collabocate-instance';
 
 const CollabocateInstanceSchema = new mongoose.Schema({
   global: { type: Boolean, default: false},
-  instance_name: { type: String },
+  instance_name: { type: String, unique: false },
   github: {
     user_name: { type: String, required: true },
     repo_name: { type: String, required: true }
   },
-  user: { type: mongoose.Schema.Types.ObjectId, ref:"user", required: true }
+  user: { type: mongoose.Schema.Types.ObjectId, ref:"user", required: true, unique: false }
 },
 {
   timestamps: true,
 });
 
+CollabocateInstanceSchema.index({ user: 1, instance_name: 1 }, { unique: true });
 
 const CollabocateInstanceModel = mongoose.model<CollabocateInstanceDocument>(collectionName, CollabocateInstanceSchema, collectionName); //declare collection name a second time to prevent mongoose from pluralizing or adding 's' to the collection name
 
