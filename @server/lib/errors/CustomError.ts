@@ -8,6 +8,9 @@ export enum HttpCode {
 export interface CustomErrorInterface {
   status?: HttpCode;
   message: string;
+  //====== Mongoose Specific Error Property =======
+  code?: number;
+  //===============================================
 }
 
 export class CustomError extends Error implements CustomErrorInterface {

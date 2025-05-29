@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import { CustomErrorInterface, HttpCode } from '@lib/errors/CustomError';
 import { error } from '@lib/helpers';
 
@@ -20,3 +20,13 @@ class ErrorHandler {
 }
 
 export const errorHandler = new ErrorHandler();
+
+export const handleMongooseError = (err: CustomErrorInterface, req: Request, res: Response, next: NextFunction) => {
+  //====== Mongoose Specific Error Property =======
+  if (err.code === 11000){
+    err.status = 400;
+    err.message = `Duplicate Error: Data already exist`;
+  }
+  //===============================================
+  next();
+}
