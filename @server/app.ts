@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 import morgan from 'morgan';
 import cors from 'cors';
-import { errorHandler } from '@lib/errors/ErrorHandler';
+import { errorHandler, handleMongooseError } from '@lib/errors/ErrorHandler';
 import { CustomErrorInterface } from '@lib/errors/CustomError';
 import { notFoundErr } from '@lib/errors/Errors';
 import { router as appRouter } from '@server/@api-home/app.route';
@@ -47,6 +47,7 @@ app.use(() => {
 
 //====== Error handler Middleware ==========
 app.use((err: CustomErrorInterface, req: Request, res: Response, next: NextFunction) => {
+  handleMongooseError(err, req, res, next);
   errorHandler.handleError(err, res);
   next()
 });
