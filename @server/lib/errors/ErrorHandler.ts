@@ -21,11 +21,22 @@ class ErrorHandler {
 
 export const errorHandler = new ErrorHandler();
 
+const checkMongooseErrorKeyName = (err: CustomErrorInterface): string => {
+  const keyNames = Object.keys(err.keyPattern);
+  if (keyNames[0] === 'email'){
+    return keyNames[0] as string;
+  }
+  else if (keyNames[0] === 'user'){
+    return keyNames[1] as string;
+  }
+}
+
 export const handleMongooseError = (err: CustomErrorInterface, req: Request, res: Response, next: NextFunction) => {
   //====== Mongoose Specific Error Property =======
   if (err.code === 11000){
+    const keyName = checkMongooseErrorKeyName(err);
     err.status = 400;
-    err.message = `Duplicate Error: Data already exist`;
+    err.message = `Duplicate Error: ${keyName} already exist`;
   }
   //===============================================
   next();
