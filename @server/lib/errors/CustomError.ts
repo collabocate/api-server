@@ -10,6 +10,7 @@ export interface CustomErrorInterface {
   message: string;
   //====== Mongoose Specific Error Property =======
   code?: number;
+  keyPattern?: any;
   //===============================================
 }
 
