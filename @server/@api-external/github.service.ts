@@ -84,19 +84,14 @@ export const getIssueTemplatesService = async () => {
 }
 
 export const getIssueTemplatesContentService = async () => {
-  const response = await fetch(`${process.env.BACKEND_URL}/external/github/issue-templates`);
-  if (response.status === 401) {
-    unAuthorizedErr("Unauthorized: Can't access this resource");
-}
-  const template = await response.json();
-  const { templates } = template;
+  const template = await getIssueTemplatesService();
 
-  const data = await Promise.all(
-    templates.map(async (req: { name: string; download_url: string }) => {
+  const templateContents = await Promise.all(
+    template.map(async (req: { name: string; download_url: string }) => {
       const contentResponse = await fetch(req.download_url);
       if (contentResponse.status === 401) {
         unAuthorizedErr(`Unauthorized: Can't access ${req.download_url}`);
-    }
+      }
       const content = await contentResponse.text();
       let contentText;
       let contentMetadata;
@@ -111,5 +106,5 @@ export const getIssueTemplatesContentService = async () => {
     })
   );
 
-  return data;
+  return templateContents;
 };
