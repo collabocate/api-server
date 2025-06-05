@@ -84,10 +84,10 @@ export const getIssueTemplatesService = async () => {
 }
 
 export const getIssueTemplatesContentService = async () => {
-  const template = await getIssueTemplatesService();
+  const templates = await getIssueTemplatesService();
 
-  const templateContents = await Promise.all(
-    template.map(async (req: { name: string; download_url: string }) => {
+  const data = await Promise.all(
+    templates.map(async (req: { name: string; download_url: string }) => {
       const contentResponse = await fetch(req.download_url);
       if (contentResponse.status === 401) {
         unAuthorizedErr(`Unauthorized: Can't access ${req.download_url}`);
@@ -106,5 +106,5 @@ export const getIssueTemplatesContentService = async () => {
     })
   );
 
-  return templateContents;
+  return data;
 };
