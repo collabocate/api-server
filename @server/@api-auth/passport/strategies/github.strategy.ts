@@ -41,7 +41,7 @@ export const githubStrategy = new Strategy(
         const createUser = new User({
           email: user_email,
           email_verified: true,
-          password: 12345, // default password (it can be changed later)
+          password: process.env.DEFAULT_USER_PASSWORD as string, // default password (it can be changed later)
         });
         user = await createUser.save();
         success(`${user_email} just signed up`);

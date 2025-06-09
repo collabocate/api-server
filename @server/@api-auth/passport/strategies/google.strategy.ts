@@ -42,7 +42,7 @@ export const googleStrategy = new Strategy(
         const createUser = new User({
           email: user_email,
           email_verified: true,
-          password: Number(process.env.DEFAULT_USER_PASSWORD),
+          password: process.env.DEFAULT_USER_PASSWORD as string,
         });
         user = await createUser.save();
         success(`${user_email} just signed up`);
