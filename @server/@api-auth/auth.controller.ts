@@ -43,7 +43,7 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
         };
         success(`SUCCESS: User signup or login with Github was successfull`);
         const res_string = JSON.stringify(response);
-        res.redirect(`${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/auth/github/callback?response=${res_string}`)
+        res.redirect(`${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/auth/callback?response=${res_string}`)
         
       } catch (err) {
         next(err)
