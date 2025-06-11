@@ -16,7 +16,7 @@ export const githubStrategy = new Strategy(
     clientID: process.env.GITHUB_CLIENT_ID as string,
     clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     callbackURL: `${process.env.BACKEND_URL as string}/auth/github/callback`,
-    scope: ['user', 'repo']
+    scope: ['email']
   },
   async (accessToken: string, refreshToken: string, profile: Profile, done: DoneCallback)=>{
     try {
@@ -41,7 +41,7 @@ export const githubStrategy = new Strategy(
         const createUser = new User({
           email: user_email,
           email_verified: true,
-          password: process.env.DEFAULT_USER_PASSWORD as string, // default password (it can be changed later)
+          password: 12345, // default password (it can be changed later)
         });
         user = await createUser.save();
         success(`${user_email} just signed up`);
