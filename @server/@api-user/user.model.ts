@@ -13,6 +13,7 @@ export interface UserDocument extends mongoose.Document {
   email_verified: boolean;
   password: string;
   role: UserRole;
+  github_access_token?: string;
   createdAt?: Date;
   updatedAt?: Date;
   instance: CollabocateInstanceDocument[];
@@ -30,6 +31,7 @@ const UserSchema = new mongoose.Schema({
   email_verified: { type: Boolean, required:true, default: false},
   password: { type: String, required: true },
   role: { type: String, required: true, default: UserRole.User },
+  github_access_token: { type: String, default: "null" },
   instance: [
     { type: mongoose.Schema.Types.ObjectId, ref:'collabocate-instance' }
   ]

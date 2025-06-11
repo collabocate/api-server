@@ -20,10 +20,6 @@ export const githubStrategy = new Strategy(
   },
   async (accessToken: string, refreshToken: string, profile: Profile, done: DoneCallback)=>{
     try {
-      // console.log(profile);
-      // success(`ACCESS_TOKEN: ${accessToken}`);
-      // success(`REFRESH_TOKEN: ${refreshToken}`);
-
       // check if email is part of the returned properties of the github user profile
       const user_email = profile.emails[0].value
       if (!user_email) {
@@ -33,6 +29,7 @@ export const githubStrategy = new Strategy(
       if (user) {
         if (!user.email_verified) {
           user.email_verified = true;
+          user.github_access_token = accessToken;
           user = await user.save()
         }
         success(`${user_email} just logged in`);
@@ -42,6 +39,7 @@ export const githubStrategy = new Strategy(
           email: user_email,
           email_verified: true,
           password: process.env.DEFAULT_USER_PASSWORD as string, // default password (it can be changed later)
+          github_access_token: accessToken,
         });
         user = await createUser.save();
         success(`${user_email} just signed up`);
