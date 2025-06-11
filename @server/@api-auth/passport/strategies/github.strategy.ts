@@ -7,6 +7,7 @@ import { success } from '@lib/helpers';
 
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
+import { revokeGithubAccessToken } from '@api-external/github.service';
 
 const dotEnv = dotenv.config();
 dotenvExpand.expand(dotEnv);
@@ -20,6 +21,8 @@ export const githubStrategy = new Strategy(
   },
   async (accessToken: string, refreshToken: string, profile: Profile, done: DoneCallback)=>{
     try {
+      success(`ACCESS_TOKEN: ${accessToken}`);
+
       // check if email is part of the returned properties of the github user profile
       const user_email = profile.emails[0].value
       if (!user_email) {
@@ -29,9 +32,13 @@ export const githubStrategy = new Strategy(
       if (user) {
         if (!user.email_verified) {
           user.email_verified = true;
-          user.github_access_token = accessToken;
-          user = await user.save()
         }
+        if (user.github_access_token !== "null"){
+          revokeGithubAccessToken(user.github_access_token);
+          user.github_access_token = "null";
+        }
+        user.github_access_token = accessToken;
+        user = await user.save()
         success(`${user_email} just logged in`);
       }
       else {

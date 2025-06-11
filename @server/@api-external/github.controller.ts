@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { success } from '@lib/helpers';
-import { createIssueService, getIssuesService, getPullRequestsService, getRepositoriesService,getIssueTemplatesService, getIssueTemplatesContentService } from '@api-external/github.service';
+import { createIssueService, getIssuesService, getPullRequestsService, getRepositoriesService,getIssueTemplatesService, getIssueTemplatesContentService, revokeGithubAccessTokenService } from '@api-external/github.service';
+import { ReqUser } from '@ts-types/index';
 
 let response: { [key: string]: unknown } = {};
 const message = {
@@ -12,30 +13,38 @@ const message = {
   },
 }
 
-export const getIssuesController =  async (req: Request, res: Response) => {
-  const docs = await getIssuesService();
-  response = {
-    success: true,
-    message: message.success.get,
-    count: docs.length,
-    data: docs,
+export const getIssuesController =  async (req: ReqUser, res: Response, next: NextFunction) => {
+  try {
+    const docs = await getIssuesService(req.user._id);
+    response = {
+      success: true,
+      message: message.success.get,
+      count: docs.length,
+      data: docs,
+    }
+    success(message.success.get);
+    return res.status(200).json(response);
+  } catch (err) {
+    next(err);
   }
-  success(message.success.get);
-  return res.status(200).json(response);
 }
 
-export const createIssueController =  async (req: Request, res: Response) => {
-  const docs = await createIssueService(req);
-  response = {
-    success: true,
-    message: message.success.issues.submitted,
-    data: {
-      url: docs.html_url,
-      number: docs.number,
-    },
+export const createIssueController =  async (req: ReqUser, res: Response, next: NextFunction) => {
+  try {
+    const docs = await createIssueService(req);
+    response = {
+      success: true,
+      message: message.success.issues.submitted,
+      data: {
+        url: docs.html_url,
+        number: docs.number,
+      },
+    }
+    success(message.success.issues.submitted);
+    return res.status(201).json(response);
+  } catch (err) {
+    next(err);
   }
-  success(message.success.issues.submitted);
-  return res.status(201).json(response);
 }
 
 export const getPullRequestsController =  async (req: Request, res: Response) => {
@@ -62,8 +71,9 @@ export const getRepositoriesController =  async (req: Request, res: Response) =>
   return res.status(200).json(response);
 }
 
-export const getIssueTemplatesController = async (req: Request, res: Response) => {
-    const docs = await getIssueTemplatesService();
+export const getIssueTemplatesController = async (req: ReqUser, res: Response, next: NextFunction) => {
+  try {
+    const docs = await getIssueTemplatesService(req.user._id);
     const response = {
       success: true,
       message: message.success.get,
@@ -72,16 +82,40 @@ export const getIssueTemplatesController = async (req: Request, res: Response) =
     };
     success(message.success.get);
     return res.status(200).json(response);
+  } catch (err) {
+    next(err);
+  }
 }
 
-export const getIssueTemplatesContentController = async (req: Request, res: Response) => {
-  const docs = await getIssueTemplatesContentService();
-  const response = {
-    success: true,
-    message: message.success.get,
-    count: docs.length,
-    data: docs,
-  };
-  success(message.success.get);
-  return res.status(200).json(response);
+export const getIssueTemplatesContentController = async (req: ReqUser, res: Response, next: NextFunction) => {
+  try {
+    const docs = await getIssueTemplatesContentService(req.user._id);
+    const response = {
+      success: true,
+      message: message.success.get,
+      count: docs.length,
+      data: docs,
+    };
+    success(message.success.get);
+    return res.status(200).json(response);
+  } catch (err) {
+    next(err);
+  }
 };
+
+export const revokeGithubAccessTokenController =  async (req: ReqUser, res: Response, next: NextFunction) => {
+  try {
+    const docs = await revokeGithubAccessTokenService(req.user._id);
+    response = {
+      success: true,
+      message: "github access token successfully revoked",
+      data: {
+        docs
+      },
+    }
+    success("github access token successfully revoked");
+    return res.status(201).json(response);
+  } catch (err) {
+    next(err);
+  }
+}
