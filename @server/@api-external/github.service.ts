@@ -1,17 +1,25 @@
 import { Request } from 'express';
-import { unAuthorizedErr } from '@lib/errors/Errors';
+import { notFoundErr, unAuthorizedErr } from '@lib/errors/Errors';
+import { UserModel as User } from '@server/@api-user/user.model';
 
-export const getIssuesService =  async () => {
-    const response = await fetch(`${process.env.REPO_API_URL}/issues`, {
-        headers: {
-          Authorization: `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
-        },
-    });
-    if (response.status === 401) {
-      unAuthorizedErr("Unauthorized: Can't access this resource");
+export const getIssuesService =  async (user_id: string) => {
+  const user = await User.findById(user_id).exec();
+  if(!user){
+    notFoundErr('User not found');
   }
-    const data = await response.json();
-    return data;
+
+  const response = await fetch(`${process.env.REPO_API_URL}/issues`, {
+    headers: {
+      Authorization: user.github_access_token === "null" ? `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}` : `Bearer ${user.github_access_token}`,
+    },
+  });
+
+  if (response.status === 401) {
+    unAuthorizedErr("Unauthorized: Can't access this resource");
+  }
+
+  const data = await response.json();
+  return data;
 }
   
 export const createIssueService =  async (req: Request) => {
