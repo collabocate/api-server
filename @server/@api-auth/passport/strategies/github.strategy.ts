@@ -17,7 +17,7 @@ export const githubStrategy = new Strategy(
     clientID: process.env.GITHUB_CLIENT_ID as string,
     clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     callbackURL: `${process.env.BACKEND_URL as string}/auth/github/callback`,
-    scope: ['user', 'repo']
+    scope: ['email']
   },
   async (accessToken: string, refreshToken: string, profile: Profile, done: DoneCallback)=>{
     try {
