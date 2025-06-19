@@ -4,7 +4,6 @@ import passport from 'passport';
 import { UserDocument } from '@server/@api-user/user.model';
 import jwt from 'jsonwebtoken'; 
 import dotenv from 'dotenv';
-import { oauth2_err_msg } from './middlewares/auth.middleware';
 dotenv.config();
 
 // const routeName = 'user';
@@ -16,7 +15,7 @@ let response: { [key: string]: unknown } = {};
 export const signupOrLoginWithGithubController = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("github", {
       session: false,
-      failureRedirect: `${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/login?error=${oauth2_err_msg}`
+      failureRedirect: `${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/login?error=AuthenticationError`
     },
     (err: Error, user: UserDocument) => {
       try {
@@ -50,8 +49,9 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
         res.redirect(`${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/auth/callback?response=${res_string}`);
         
       } catch (err) {
-        error(err.message)
-        next(err)
+        error(err.message);
+        res.redirect(`${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/login?error=ServerError`);
+        // next(err)
       }
   }) (req, res, next)
 }
