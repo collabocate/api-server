@@ -11,8 +11,6 @@ import { unAuthorizedErr } from '@lib/errors/Errors';
 //               has access to (Usually by ROLES)
 // -----------------------------------------------------------------------------------------------------------//
 
-export const oauth2_err_msg = "Something went wrong, please try again"
-
 export const authenticateUserWithJWT = (req: ReqUser, res: Response, next: NextFunction) => {
   passport.authenticate('jwt', {session: false},
     (err: Error, payload: Payload, info: { message: string }) => {
@@ -62,10 +60,7 @@ export const authWithGoogle = (req: ReqUser, res: Response, next: NextFunction) 
 };
 
 export const authWithGithub = (req: ReqUser, res: Response, next: NextFunction) => {
-  passport.authenticate('github', {
-      session: false,
-      failureRedirect: `${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/login?error=${oauth2_err_msg}`
-    },
+  passport.authenticate('github', { scope: ['user'] },
     () => {
     //nothing to do here for now
   }) (req, res, next)
