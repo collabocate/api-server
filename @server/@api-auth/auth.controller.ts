@@ -4,6 +4,7 @@ import passport from 'passport';
 import { UserDocument } from '@server/@api-user/user.model';
 import jwt from 'jsonwebtoken'; 
 import dotenv from 'dotenv';
+import { oauth2_err_msg } from './middlewares/auth.middleware';
 dotenv.config();
 
 // const routeName = 'user';
@@ -13,11 +14,13 @@ let response: { [key: string]: unknown } = {};
 
 //---------------------- AUTHENTICATION (SIGNUP AND LOGIN) -------------------------------//
 export const signupOrLoginWithGithubController = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate("github", {session: false},
+  passport.authenticate("github", {
+      session: false,
+      failureRedirect: `${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/login?error=${oauth2_err_msg}`
+    },
     (err: Error, user: UserDocument) => {
       try {
         if (err) {
-          // const myErr = new Error("[UNAUTHORIZED] Invalid google user");
           throw err;
         }
 
