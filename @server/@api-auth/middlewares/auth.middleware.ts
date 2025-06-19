@@ -60,7 +60,7 @@ export const authWithGoogle = (req: ReqUser, res: Response, next: NextFunction) 
 };
 
 export const authWithGithub = (req: ReqUser, res: Response, next: NextFunction) => {
-  passport.authenticate('github', { scope: ['user'] },
+  passport.authenticate('github', {session: false},
     () => {
     //nothing to do here for now
   }) (req, res, next)
