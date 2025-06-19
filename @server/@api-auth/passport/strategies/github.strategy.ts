@@ -16,14 +16,10 @@ export const githubStrategy = new Strategy(
     clientID: process.env.GITHUB_CLIENT_ID as string,
     clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     callbackURL: `${process.env.BACKEND_URL as string}/auth/github/callback`,
-    scope: ['user', 'repo']
+    scope: ['user']
   },
   async (accessToken: string, refreshToken: string, profile: Profile, done: DoneCallback)=>{
     try {
-      // console.log(profile);
-      // success(`ACCESS_TOKEN: ${accessToken}`);
-      // success(`REFRESH_TOKEN: ${refreshToken}`);
-
       // check if email is part of the returned properties of the github user profile
       const user_email = profile.emails[0].value
       if (!user_email) {
