@@ -52,6 +52,7 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
         error(`error_status: ${err.status || 500}`);
         error(`error_message: ${err.message}`);
         res.redirect(`${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/login?error=ServerError`);
+        next();
       }
   }) (req, res, next)
 }
