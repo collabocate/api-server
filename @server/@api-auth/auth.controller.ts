@@ -13,7 +13,7 @@ let response: { [key: string]: unknown } = {};
 
 //---------------------- AUTHENTICATION (SIGNUP AND LOGIN) -------------------------------//
 export const signupOrLoginWithGithubController = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate("github", {
+  passport.authenticate('github', {
       session: false,
       failureRedirect: `${process.env.APP_SUBDOMAIN_CLIENT_APP_URL}/login?error=AuthenticationError`
     },
