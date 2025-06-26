@@ -20,6 +20,7 @@ export const signupOrLoginWithGithubController = (req: Request, res: Response, n
     (err: Error, user: UserDocument) => {
       try {
         if (err) {
+          // const myErr = new Error("[UNAUTHORIZED] Invalid google user");
           throw err;
         }
 
