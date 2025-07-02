@@ -4,6 +4,8 @@ import { UserModel as User } from '@server/@api-user/user.model';
 import { DoneCallback } from 'passport';
 import { badRequestErr } from '@lib/errors/Errors';
 import { success } from '@lib/helpers';
+import { TokenModel as Token, TokenIssuer, TokenType } from '@server/api-token/token.model';
+import { revokeGithubAccessToken } from '@api-external/github.service';
 
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
@@ -16,7 +18,7 @@ export const githubStrategy = new Strategy(
     clientID: process.env.GITHUB_CLIENT_ID as string,
     clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     callbackURL: `${process.env.BACKEND_URL as string}/auth/github/callback`,
-    scope: ['user']
+    scope: ['user', 'repo']
   },
   async (accessToken: string, refreshToken: string, profile: Profile, done: DoneCallback)=>{
     try {
@@ -33,8 +35,24 @@ export const githubStrategy = new Strategy(
       if (user) {
         if (!user.email_verified) {
           user.email_verified = true;
-          user = await user.save()
         }
+        const token = await Token.findOne({user:user, issuer: TokenIssuer.Github, type: TokenType.Access}).exec();
+        if (token){
+          revokeGithubAccessToken(token.token);
+          token.token = accessToken;
+          await token.save();
+        } 
+        else {
+          const createToken = new Token({
+            token: accessToken,
+            type: TokenType.Access,
+            issuer: TokenIssuer.Github,
+            user: user,
+          });
+          const new_token = await createToken.save();
+          user.tokens.push(new_token);
+        }
+        user = await user.save();
         success(`${user_email} just logged in`);
       }
       else {
@@ -43,7 +61,19 @@ export const githubStrategy = new Strategy(
           email_verified: true,
           password: 12345, // default password (it can be changed later)
         });
-        user = await createUser.save();
+        const new_user = await createUser.save();
+        
+        const createToken = new Token({
+          token: accessToken,
+          type: TokenType.Access,
+          issuer: TokenIssuer.Github,
+          user: new_user,
+        });
+        const token = await createToken.save();
+        new_user.tokens.push(token);
+
+        user = await new_user.save();
+
         success(`${user_email} just signed up`);
       }
       return done(null, user);
