@@ -1,6 +1,7 @@
 import { badRequestErr, notFoundErr } from '@lib/errors/Errors';
 import { UserDocument, UserModel as User, UserRole } from '@server/@api-user/user.model';
 import { CollabocateInstanceModel as CollabocateInstance } from '@collabocate/instance.model';
+import { TokenModel as Token } from '@server/api-token/token.model';
 
 
 export const getAllUsersService = async () => {
@@ -22,6 +23,7 @@ export const deleteOneUserService = async (paramsId: string) => {
     notFoundErr('Operation not allowed');
   }
   await CollabocateInstance.deleteMany({ user: user }).exec();
+  await Token.deleteMany({ user: user }).exec();
   const query = await User.deleteOne({ _id: paramsId }).exec();
   return query;
 }
