@@ -53,7 +53,7 @@ export const githubStrategy = new Strategy(
           user.tokens.push(new_token);
         }
         user = await user.save();
-        success(`${user_email} just logged in`);
+        success(`${user_email} just logged in via GitHub`);
       }
       else {
         const createUser = new User({
@@ -74,7 +74,7 @@ export const githubStrategy = new Strategy(
 
         user = await new_user.save();
 
-        success(`${user_email} just signed up`);
+        success(`${user_email} just signed up via GitHub`);
       }
       return done(null, user);
 
