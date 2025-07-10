@@ -5,28 +5,17 @@ import { UserRole } from '@user/user.model';
 
 const router: IRouter = express.Router();
 
-router.get('/issues', 
-            authenticateUserWithJWT,
-            authorizeByUserRoles([UserRole.Admin, UserRole.User]),
-            getIssuesController);
+router.get('/issues', getIssuesController);
 //-------------------------------------------
 router.post('/issues',
             authenticateUserWithJWT,
             authorizeByUserRoles([UserRole.Admin, UserRole.User]),
             createIssueController);
 //-------------------------------------------
-router.get('/issue-templates',  
-            authenticateUserWithJWT,
-            authorizeByUserRoles([UserRole.Admin, UserRole.User]),
-            getIssueTemplatesController);
-//-------------------------------------------
+router.get('/issue-templates', getIssueTemplatesController);
 router.get('/pull-requests', getPullRequestsController);
 router.get('/repositories', getRepositoriesController);
-//-------------------------------------------
-router.get('/templates/issues', 
-            authenticateUserWithJWT,
-            authorizeByUserRoles([UserRole.Admin, UserRole.User]),
-            getIssueTemplatesContentController);
+router.get('/templates/issues', getIssueTemplatesContentController);
 //-------------------------------------------
 router.delete('/revoke-token', 
             authenticateUserWithJWT,

@@ -3,16 +3,10 @@ import { UserModel as User } from '@server/@api-user/user.model';
 import { TokenModel as Token, TokenIssuer, TokenType } from '@server/api-token/token.model';
 import { ReqUser } from '@ts-types/index';
 
-export const getIssuesService =  async (user_id: string) => {
-  const user = await User.findById(user_id).exec();
-  if(!user){
-    notFoundErr('User not found');
-  }
-  const token = await Token.findOne({user:user, issuer: TokenIssuer.Github, type: TokenType.Access}).exec();
-
+export const getIssuesService =  async () => {
     const response = await fetch(`${process.env.REPO_API_URL}/issues`, {
         headers: {
-          Authorization: token ? `Bearer ${token.token}` : `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
         },
     });
     if (response.status === 401) {
@@ -81,16 +75,11 @@ export const getRepositoriesService =  async () => {
     return data;
 }
 
-export const getIssueTemplatesService = async (user_id: string) => {
-  const user = await User.findById(user_id).exec();
-  if(!user){
-    notFoundErr('User not found');
-  }
-  const token = await Token.findOne({user:user, issuer: TokenIssuer.Github, type: TokenType.Access}).exec();
+export const getIssueTemplatesService = async () => {
 
   const response = await fetch(`${process.env.REPO_API_URL}/contents/.github/ISSUE_TEMPLATE`, {
     headers: {
-      Authorization: token ? `Bearer ${token.token}` : `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${process.env.GITHUB_PERSONAL_ACCESS_TOKEN}`,
     },
   });
 
@@ -102,8 +91,8 @@ export const getIssueTemplatesService = async (user_id: string) => {
   return data;
 }
 
-export const getIssueTemplatesContentService = async (user_id: string) => {
-  const templates = await getIssueTemplatesService(user_id);
+export const getIssueTemplatesContentService = async () => {
+  const templates = await getIssueTemplatesService();
 
   const data = await Promise.all(
     templates.map(async (req: { name: string; download_url: string }) => {
