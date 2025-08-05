@@ -11,6 +11,7 @@ router.post('/issues',
             authenticateUserWithJWT,
             authorizeByUserRoles([UserRole.Admin, UserRole.User]),
             createIssueController);
+router.post('/issues-unauthenticated', createIssueController);
 //-------------------------------------------
 router.get('/issue-templates', getIssueTemplatesController);
 router.get('/pull-requests', getPullRequestsController);

@@ -17,10 +17,7 @@ export const getIssuesService =  async () => {
 }
   
 export const createIssueService =  async (req: ReqUser) => {
-  const user = await User.findById(req.user._id).exec();
-  if(!user){
-    notFoundErr('User not found');
-  }
+  const user = await User.findById(req?.user?._id).exec();
   const token = await Token.findOne({user:user, issuer: TokenIssuer.Github, type: TokenType.Access}).exec();
 
     const { title, body } = req.body;
