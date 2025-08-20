@@ -20,6 +20,10 @@ export const createIssueService =  async (req: ReqUser) => {
   const user = await User.findById(req?.user?._id).exec();
   const token = await Token.findOne({user:user, issuer: TokenIssuer.Github, type: TokenType.Access}).exec();
 
+  if(user && !token) {
+    unAuthorizedErr("Unauthorized: Login with Github to access this resource");
+  }
+
     const { title, body } = req.body;
     const response = await fetch(`${process.env.REPO_API_URL}/issues`, {
         method: "POST",
