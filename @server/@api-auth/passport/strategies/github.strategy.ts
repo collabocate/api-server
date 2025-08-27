@@ -4,7 +4,7 @@ import { UserModel as User } from '@server/@api-user/user.model';
 import { DoneCallback } from 'passport';
 import { badRequestErr } from '@lib/errors/Errors';
 import { success } from '@lib/helpers';
-import { TokenModel as Token, TokenIssuer, TokenType } from '@server/api-token/token.model';
+import { TokenModel as Token, TokenIssuer, TokenType } from '@token/token.model';
 import { revokeGithubAccessToken } from '@api-external/github.service';
 
 import dotenv from 'dotenv';
