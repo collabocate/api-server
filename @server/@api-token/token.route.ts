@@ -4,7 +4,7 @@ import {
   getAllTokenController,
   getOneTokenController,
   getTokenController,
-} from '@server/api-token/token.controller';
+} from '@token/token.controller';
 import { authenticateUserWithJWT, authorizeByUserRoles } from '@auth/middlewares/auth.middleware';
 import { UserRole } from '@user/user.model';
 

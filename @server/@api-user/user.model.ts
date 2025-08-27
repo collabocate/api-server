@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from "bcrypt";
 import { CollabocateInstanceDocument } from '@collabocate/instance.model';
-import { TokenDocument } from '@server/api-token/token.model';
+import { TokenDocument } from '@token/token.model';
 
 export enum UserRole {
   Admin = 'admin',

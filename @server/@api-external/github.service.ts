@@ -1,6 +1,6 @@
 import { badRequestErr, notFoundErr, unAuthorizedErr } from '@lib/errors/Errors';
 import { UserModel as User } from '@server/@api-user/user.model';
-import { TokenModel as Token, TokenIssuer, TokenType } from '@server/api-token/token.model';
+import { TokenModel as Token, TokenIssuer, TokenType } from '@token/token.model';
 import { ReqUser } from '@ts-types/index';
 
 export const getIssuesService =  async () => {
