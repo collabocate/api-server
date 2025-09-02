@@ -4,11 +4,9 @@ import mongoose from 'mongoose';
 export interface CollabocateInstanceDocument extends mongoose.Document {
   _id?: string;
   global: boolean;
-  instance_name?: string;
-  github: {
-    user_name: string;
-    repo_name: string;
-  };
+  instance_name: string;
+  github_username: string;
+  github_reponame: string;
   createdAt?: Date;
   updatedAt?: Date;
   user: UserDocument;
@@ -19,10 +17,8 @@ export const collectionName = 'collabocate-instance';
 const CollabocateInstanceSchema = new mongoose.Schema({
   global: { type: Boolean, default: false},
   instance_name: { type: String, unique: false },
-  github: {
-    user_name: { type: String, required: true },
-    repo_name: { type: String, required: true }
-  },
+  github_username: { type: String, required: true },
+  github_reponame: { type: String, required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref:"user", required: true, unique: false }
 },
 {
