@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 export interface CollabocateInstanceDocument extends mongoose.Document {
   _id?: string;
   global: boolean;
-  instance_name: string;
+  instance_name?: string;
   github_username: string;
   github_reponame: string;
   createdAt?: Date;
