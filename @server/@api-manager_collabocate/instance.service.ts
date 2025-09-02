@@ -29,10 +29,8 @@ export const createCollabocateInstanceService = async (user_id: string, requestB
   const createCollabocateInstance = new CollabocateInstance({
     global: requestBody.global,
     instance_name: requestBody.instance_name,
-    github: {
-      user_name: requestBody.github.user_name,
-      repo_name: requestBody.github.repo_name
-    },
+    github_user_name: requestBody.github_username,
+    github_repo_name: requestBody.github_reponame,
     user: user
   });
 
