@@ -26,8 +26,10 @@ export const createCollabocateInstanceController = async (req: ReqUser, res: Res
         _id: doc._id,
         global: doc.global,
         instance_name: doc.instance_name,
-        github_username: doc.github_username,
-        github_reponame: doc.github_reponame,
+        github: {
+          user_name: doc.github_username,
+          repo_name: doc.github_reponame
+        },
         user_id: doc.user._id,
         createAt: doc.createdAt,
         updatedAt: doc.updatedAt
@@ -52,8 +54,10 @@ export const getAllCollabocateInstanceController = async (req: Request, res: Res
           _id: doc._id,
           global: doc.global,
           instance_name: doc.instance_name,
-          github_username: doc.github_username,
-          github_reponame: doc.github_reponame,
+          github: {
+            user_name: doc.github_username,
+            repo_name: doc.github_reponame
+          },
           user_id: doc.user._id,
           createAt: doc.createdAt,
           updatedAt: doc.updatedAt
@@ -80,8 +84,10 @@ export const getCollabocateInstanceController = async (req: ReqUser, res: Respon
           _id: doc._id,
           global: doc.global,
           instance_name: doc.instance_name,
-          github_username: doc.github_username,
-          github_reponame: doc.github_reponame,
+          github: {
+            user_name: doc.github_username,
+            repo_name: doc.github_reponame
+          },
           user_id: doc.user._id,
           createAt: doc.createdAt,
           updatedAt: doc.updatedAt
@@ -107,8 +113,10 @@ export const getOneCollabocateInstanceController = async (req: ReqUser, res: Res
         _id: doc._id,
         global: doc.global,
         instance_name: doc.instance_name,
-        github_username: doc.github_username,
-        github_reponame: doc.github_reponame,
+        github: {
+          user_name: doc.github_username,
+          repo_name: doc.github_reponame
+        },
         user_id: doc.user._id,
         createAt: doc.createdAt,
         updatedAt: doc.updatedAt
@@ -156,8 +164,10 @@ export const updateOneCollabocateInstanceController = async (req: Request, res: 
         _id: doc._id,
         global: doc.global,
         instance_name: doc.instance_name,
-        github_username: doc.github_username,
-        github_reponame: doc.github_reponame,
+        github: {
+          user_name: doc.github_username,
+          repo_name: doc.github_reponame
+        },
         user_id: doc.user._id,
         createAt: doc.createdAt,
         updatedAt: doc.updatedAt

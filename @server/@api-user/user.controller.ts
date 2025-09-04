@@ -35,8 +35,10 @@ export const getAllUsersController = async (req: Request, res: Response, next: N
                 _id: instance._id,
                 global: instance.global,
                 instance_name: instance.instance_name,
-                github_username: instance.github_username,
-                github_reponame: instance.github_reponame,
+                github: {
+                  user_name: instance.github_username,
+                  repo_name: instance.github_reponame
+                },
                 createAt: instance.createdAt,
                 updatedAt: instance.updatedAt
               }
@@ -70,8 +72,10 @@ export const getOneUserController = async (req: ReqUser, res: Response, next: Ne
             _id: instance._id,
             global: instance.global,
             instance_name: instance.instance_name,
-            github_username: instance.github_username,
-            github_reponame: instance.github_reponame,
+            github: {
+              user_name: instance.github_username,
+              repo_name: instance.github_reponame
+            },
             createAt: instance.createdAt,
             updatedAt: instance.updatedAt
           }
